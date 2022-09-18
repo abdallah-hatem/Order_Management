@@ -1,0 +1,88 @@
+.orders-cont {
+  .postDetails {
+    background-position: 50% 0;
+    background-size: cover;
+    background-attachment: fixed;
+    color: #fff;
+    position: relative;
+    min-height: 400px;
+  }
+
+  .postDetails:before {
+    content: "";
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .postDetails h2 {
+    color: #fff;
+  }
+
+  .postDetails .contentHolder {
+    text-align: center;
+  }
+
+  .postDetails .contentHolder button {
+    font-size: 40px;
+    line-height: 1;
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 30px;
+    border-radius: 50%;
+    width: 110px;
+    height: 110px;
+  }
+  .morePosts {
+    display: flex;
+    justify-content: center;
+    padding: 62px;
+  }
+  .FeaturesTitle,
+  .titleLatest,
+  .titleLatestadminForm {
+    font-weight: 700;
+    font-size: 20px;
+    transition: opacity 0.1s linear;
+  }
+
+  .titleLatest,
+  .titleLatestadminForm {
+    padding: 0 0 15px;
+    color: #404040;
+  }
+  .card label {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: #9a9a9a;
+  }
+  .list-items {
+    align-content: flex-start;
+    align-items: flex-end;
+    align-self: flex-end;
+    width: 50%;
+  }
+  .aboutus-deleteicon,
+  .aboutus-editicon {
+    padding: 10px;
+  }
+  .btn,
+  .navbar .navbar-nav > a.btn {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.35em;
+    text-transform: uppercase;
+    border: none;
+    margin: 10px 1px;
+    border-radius: 3px;
+    padding: 11px 22px;
+    cursor: pointer;
+    background-color: #66615b;
+    color: #fff;
+    transition: all 0.15s linear;
+  }
+}

@@ -1,24 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import { useTranslation } from "react-i18next";
+import Layout from "./Layout/Layout";
+
 
 function App() {
+  const { i18n } = useTranslation();
+  if (i18n.language === "en-US") {
+    i18n.init();
+    document.documentElement.setAttribute("lang", "en");
+    i18n.changeLanguage("en");
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          e <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout />
   );
 }
 

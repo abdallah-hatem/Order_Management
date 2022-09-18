@@ -1,0 +1,109 @@
+// body {
+//   margin: 0;
+//   padding: 0;
+//   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+//     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+//   background-color: #f1f3f6;
+// }
+
+// code {
+//   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+// }
+
+// ::-webkit-scrollbar {
+//   display: none;
+// }
+
+// .nav {
+//   height: 75px;
+//   background-color: #ffffff;
+//   width: 100%;
+//   position: fixed;
+//   top: 0;
+//   border-bottom: 1px solid rgba(128, 128, 128, 0.162);
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding: 0 10px;
+//   z-index: 100;
+
+//   .nav-bar-left {
+//     // width: 340px;
+//     height: 80%;
+//     img {
+//       width: 280px;
+//       height: 100%;
+//     }
+//   }
+
+//   .nav-bar-right {
+//   }
+// }
+// .content-cont {
+//   margin-top: 55px;
+//   padding: 20px;
+// }
+
+// @media only screen and (max-width: 500px) {
+//   .nav {
+//     height: 100px;
+//     justify-content: center;
+//     .nav-bar-left {
+//       width: 100%;
+//       height: 70%;
+//       display: flex;
+//       align-items: center;
+//       justify-content: space-between;
+//       img {
+//         width: 280px;
+//         height: 100%;
+//       }
+//     }
+//   }
+
+//   .content-cont {
+//     margin-top: 100px;
+//   }
+// }
+
+// date picker
+
+.react-datepicker__input-container input {
+  border: none !important;
+  padding: 0 !important;
+}
+
+// datagrid headers
+
+.dx-datagrid-headers {
+  color: #374767 !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+}
+
+// color button
+.button-34 {
+  background: #5e5df0;
+  border-radius: 999px;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: Inter, Helvetica, "Apple Color Emoji", "Segoe UI Emoji",
+    NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji",
+    EmojiSymbols, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+    "Noto Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: fit-content;
+  word-break: break-word;
+  border: 0;
+}
