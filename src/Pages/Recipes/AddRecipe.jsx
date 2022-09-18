@@ -1,20 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import "react-datepicker/dist/react-datepicker.css"
-import FormComponent from "../Web Components/FormComponent/FormComponent"
-import SearchBar from "../Web Components/SearchBar/SearchBar"
-import MasterTable from "../Web Components/MasterTable/MasterTable"
-import ButtonComponent from "../Web Components/ButtonComponent/ButtonComponent"
-import { GET_PRODUCTS } from "../Services/Api/Api"
+import FormComponent from "../../Web Components/FormComponent/FormComponent"
+import SearchBar from "../../Web Components/SearchBar/SearchBar"
+import MasterTable from "../../Web Components/MasterTable/MasterTable"
+import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
+import { GET_PRODUCTS } from "../../Services/Api/Api"
 
-function ProductionOrder() {
+function AddRecipe() {
   const { t } = useTranslation()
 
   const defaultValues = useRef({
     number: "",
-    store: "",
-    note: "",
-    date: "",
+    name: "",
   })
 
   const [values, setValues] = useState(defaultValues.current)
@@ -35,44 +33,21 @@ function ProductionOrder() {
     // GET_PRODUCTS().then((data) => console.log(data))
   }, [])
 
-  const [startDate, setStartDate] = useState(new Date())
+  const data = [
+    {
+      label: "Number :",
+      placeholder: "Number",
+      name: "number",
+      handleChange,
+      value: values["number"],
+    },
 
-  const dateData = [
     {
-      label: "Date :",
-      value: "date",
-      selected: startDate,
-      onChange: setStartDate,
-    },
-  ]
-
-  const options = [
-    {
-      label: "Store 1",
-      value: "Store 1",
-    },
-    {
-      label: "Store 2",
-      value: "Store 2",
-    },
-    {
-      label: "Store 3",
-      value: "Store 3",
-    },
-  ]
-
-  const recipeOptions = [
-    {
-      label: "Recipe 1",
-      value: "Recipe 1",
-    },
-    {
-      label: "Recipe 2",
-      value: "Recipe 2",
-    },
-    {
-      label: "Recipe 3",
-      value: "Recipe 3",
+      label: "Name :",
+      placeholder: "Name",
+      name: "name",
+      handleChange,
+      value: values["name"],
     },
   ]
 
@@ -91,33 +66,6 @@ function ProductionOrder() {
     },
   ]
 
-  const data = [
-    {
-      label: "Number :",
-      placeholder: "Number",
-      name: "number",
-      handleChange,
-      value: values["number"],
-    },
-    {
-      label: "Store :",
-      placeholder: "Select Option",
-      name: "store",
-      chooseOptions: true,
-      options: options,
-      handleChange,
-      value: values["store"],
-    },
-    {
-      label: "Note :",
-      placeholder: "Note",
-      name: "note",
-      textArea: true,
-      handleChange,
-      value: values["note"],
-    },
-  ]
-
   const columns = [
     {
       field: "item",
@@ -125,9 +73,9 @@ function ProductionOrder() {
       options: itemOptions,
     },
     {
-      field: "recipe",
-      caption: t("Recipe"),
-      options: recipeOptions,
+      field: "quantity",
+      caption: t("Quantity"),
+      dataType: "number",
     },
     {
       field: "cost",
@@ -145,25 +93,23 @@ function ProductionOrder() {
 
   const tableData = [
     {
-      code: 1110000001,
+      //   code: 1110000001,
       //   amount: 100,
     },
   ]
 
   useEffect(() => {
     console.log(values)
-  }, [values, startDate])
+  }, [values])
 
   return (
-    <FormComponent title="Production Order">
+    <FormComponent title="Add Recipes">
       <SearchBar
         listView
         showButton={false}
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         data={data}
-        dateData={dateData}
-        startDate={startDate}
         values={values}
         colWidth="10"
         labelWidth="190px"
@@ -175,11 +121,11 @@ function ProductionOrder() {
         allowDelete
         allowUpdate
         ColoredRows
+        editingMode="popup"
         searchPanel={false}
         columnChooser={false}
         // dataSource={tableData}
         colAttributes={columns}
-        options={options}
       />
 
       <ButtonComponent
@@ -191,4 +137,4 @@ function ProductionOrder() {
   )
 }
 
-export default ProductionOrder
+export default AddRecipe

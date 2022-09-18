@@ -1,13 +1,12 @@
-import AddInventory from "../Pages/AddInventory";
-import AddProduct from "../Pages/AddProduct";
-import InventoryReceive from "../Pages/InventoryReceive";
-import ManageInventories from "../Pages/ManageInventories";
-import ManageProducts from "../Pages/ManageProducts";
-import ProductionOrder from "../Pages/ProductionOrder";
-import ProductDetails from "../Pages/ProductDetails";
-import Orders from "../Pages/Orders";
-import AddRecipe from "../Pages/AddRecipe";
-import ManageRecipes from "../Pages/ManageRecipes";
+import AddInventory from "../Pages/Inventory/AddInventory";
+import AddProduct from "../Pages/Products/AddProduct";
+import InventoryReceive from "../Pages/Inventory/InventoryReceive";
+import ManageInventories from "../Pages/Inventory/ManageInventories";
+import ManageProducts from "../Pages/Products/ManageProducts";
+import ProductionOrder from "../Pages/Order/ProductionOrder";
+import ProductDetails from "../Pages/Products/ProductDetails";
+import AddRecipe from "../Pages/Recipes/AddRecipe";
+import ManageRecipes from "../Pages/Recipes/ManageRecipes";
 import Order from "../Pages/Order/Order";
 
 export const routes = [

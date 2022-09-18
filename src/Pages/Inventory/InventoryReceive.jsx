@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import FormComponent from "../Web Components/FormComponent/FormComponent"
-import MasterTable from "../Web Components/MasterTable/MasterTable"
-import SearchBar from "../Web Components/SearchBar/SearchBar"
+import FormComponent from "../../Web Components/FormComponent/FormComponent"
+import MasterTable from "../../Web Components/MasterTable/MasterTable"
+import SearchBar from "../../Web Components/SearchBar/SearchBar"
 
 function InventoryReceive() {
   const { t } = useTranslation()

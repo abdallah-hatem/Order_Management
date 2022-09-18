@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from "react"
-import { GET_PRODUCTS } from "../Services/Api/Api"
-import FormComponent from "../Web Components/FormComponent/FormComponent"
-import MasterTable from "../Web Components/MasterTable/MasterTable"
-import TagBox from "devextreme-react/tag-box"
+import { GET_PRODUCTS } from "../../Services/Api/Api"
+import FormComponent from "../../Web Components/FormComponent/FormComponent"
+import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import { useNavigate } from "react-router-dom"
 import { Column, Button } from "devextreme-react/data-grid"
+import { Popup } from "devextreme-react/popup"
+import ScrollView from "devextreme-react/scroll-view"
 import { useTranslation } from "react-i18next"
+import AddInventory from "./AddInventory"
+import UpdateInventories from "./UpdateInventories"
 
-function ManageProducts() {
+function ManageInventories() {
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   const [data, setData] = useState([
     {
       id: "1",
-      name: "product 1",
-      image:
-        "https://images.unsplash.com/photo-1633966887768-64f9a867bdba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHRzaGlydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      name: "inventory 1",
+      type: "Raw Materials",
     },
   ])
 
-  const navigate = useNavigate()
+  const [editOpen, setEditOpen] = useState(false)
 
   useEffect(() => {
     // GET_PRODUCTS().then((data) => setData(data))
@@ -30,6 +33,7 @@ function ManageProducts() {
       field: "id",
       caption: "ID",
       visible: false,
+      allowEditing: false,
     },
     {
       field: "name",
@@ -47,44 +51,50 @@ function ManageProducts() {
       // ),
     },
     {
-      field: "image",
-      caption: "Image",
-      dataType: "picture",
-      alignment: "center",
-      cellRender: (data) => (
-        <img style={{ width: "100px", heigth: "100x" }} src={data.value} alt="pic" />
-      ),
+      field: "type",
+      caption: "Type",
     },
   ]
 
   return (
     <>
-      <FormComponent title="Manage Products">
+      <FormComponent title="Manage Inventories">
         <MasterTable
           allowDelete
+          allowUpdate
           ColoredRows
           editingMode="popup"
+          popupTitle="Update Inventory"
           searchPanel={false}
           columnChooser={false}
           dataSource={data}
           colAttributes={columns}
         >
-          <Column type="buttons" width={120}>
+          {/* <Column type="buttons" width={120}>
             <Button
               hint={t("Update")}
-              icon="edit"
+              icon={"edit"}
               visible={true}
-              onClick={(e) => {
-                navigate(`/product-details/${e.row.data.id}`)
-              }}
+              disabled={false}
+              onClick={() => setEditOpen(true)}
+              name={"Update"}
             />
 
-            <Button name="delete" />
-          </Column>
+            <Button name={"delete"} />
+          </Column> */}
         </MasterTable>
       </FormComponent>
+
+      {/* <Popup
+        title={t("Update")}
+        height={"80vh"}
+        visible={editOpen}
+        hideOnOutsideClick={true}
+        onHiding={() => setEditOpen(false)}
+        contentComponent={() => <UpdateInventories />}
+      ></Popup> */}
     </>
   )
 }
 
-export default ManageProducts
+export default ManageInventories

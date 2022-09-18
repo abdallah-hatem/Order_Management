@@ -1,8 +1,8 @@
 import React, { useCallback, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import SearchBar from "../Web Components/SearchBar/SearchBar"
+import SearchBar from "../../Web Components/SearchBar/SearchBar"
 
-function AddInventory() {
+function UpdateInventories() {
   const { t, i18n } = useTranslation()
 
   const defaultValues = useRef({
@@ -44,10 +44,10 @@ function AddInventory() {
   return (
     <SearchBar
       listView
-      CardTitle="Add Inventory"
-      hideCard={false}
+      CardTitle="Update Inventory"
+      hideCard={true}
       data={inventoryData}
-      buttonTitle="Add"
+      buttonTitle="Update"
       handleSubmit={handleSubmit}
       colWidth="10"
       labelWidth="200px"
@@ -56,4 +56,4 @@ function AddInventory() {
   )
 }
 
-export default AddInventory
+export default UpdateInventories

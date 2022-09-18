@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react"
-import { GET_PRODUCTS } from "../Services/Api/Api"
-import FormComponent from "../Web Components/FormComponent/FormComponent"
-import MasterTable from "../Web Components/MasterTable/MasterTable"
+import { GET_PRODUCTS } from "../../Services/Api/Api"
+import FormComponent from "../../Web Components/FormComponent/FormComponent"
+import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import { useNavigate } from "react-router-dom"
 import { Column, Button } from "devextreme-react/data-grid"
 import { Popup } from "devextreme-react/popup"
 import ScrollView from "devextreme-react/scroll-view"
 import { useTranslation } from "react-i18next"
-import AddInventory from "./AddInventory"
-import UpdateInventories from "./UpdateInventories"
+// import AddInventory from "./AddInventory"
+import UpdateInventories from "../Inventory/UpdateInventories"
 
 function ManageRecipes() {
   const navigate = useNavigate()

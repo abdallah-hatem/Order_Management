@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import AddFormComponent from "../Web Components/AddFormComponent/AddFormComponent"
-import ButtonComponent from "../Web Components/ButtonComponent/ButtonComponent"
-import FormComponent from "../Web Components/FormComponent/FormComponent"
-import { ImageUploader } from "../Web Components/ImageUploader/ImageUploader"
-import InputComponent from "../Web Components/InputComponent/InputComponent"
-import MasterTable from "../Web Components/MasterTable/MasterTable"
+import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
+import FormComponent from "../../Web Components/FormComponent/FormComponent"
+import { ImageUploader } from "../../Web Components/ImageUploader/ImageUploader"
+import InputComponent from "../../Web Components/InputComponent/InputComponent"
+import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import CheckboxGroup from "react-checkbox-group"
-import SearchBar from "../Web Components/SearchBar/SearchBar"
+import SearchBar from "../../Web Components/SearchBar/SearchBar"
 import InputColor from "react-input-color"
 import { Popup } from "devextreme-react/popup"
-import { GET_PRODUCT_BY_ID, UPDATE_PRODUCT } from "../Services/Api/Api"
+import { ADD_PRODUCT } from "../../Services/Api/Api"
+import AddFormComponent from "../../Web Components/AddFormComponent/AddFormComponent"
 
-function ProductDetails() {
+function AddProduct() {
   const defaultValues = useRef({
     barcode: "",
     product_name: "",
@@ -27,7 +27,7 @@ function ProductDetails() {
     vat: "",
     product_details: "",
     image_path: "",
-    color: {},
+    color: "#37a000",
     color_name: "",
     color_details: "",
     sizes: [],
@@ -35,11 +35,8 @@ function ProductDetails() {
 
   const [values, setValues] = useState(defaultValues.current)
   const [sizes, setSizes] = useState([])
-  const [popUp, setPopUp] = useState(false)
 
-  useEffect(() => {
-    // GET_PRODUCT_BY_ID().then((data) => setValues(data))
-  }, [])
+  const [popUp, setPopUp] = useState(false)
 
   const handleChange = useCallback((e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -56,7 +53,7 @@ function ProductDetails() {
       }
     }
 
-    // UPDATE_PRODUCT(id, values)
+    // ADD_PRODUCT(values)
   }
 
   const { t, i18n } = useTranslation()
@@ -140,16 +137,6 @@ function ProductDetails() {
       handleChange,
       name: "sale_price",
       value: values["sale_price"],
-    },
-    {
-      removeContainer: true,
-      component: (
-        <img
-          style={{ height: 180, width: 180 }}
-          src="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHRzaGlydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-          alt="pic"
-        ></img>
-      ),
     },
     {
       label: "Image :",
@@ -249,7 +236,13 @@ function ProductDetails() {
       component: (
         <button
           className="button-34"
-          style={{ backgroundColor: values.color }}
+          style={{
+            backgroundColor: values.color,
+            border:"1px solid gray",
+            color: values.color === "#ffffff" && "gray",
+            // width:80,
+            // height:35
+          }}
           onClick={() => setPopUp(true)}
         >
           {t("Add Color")}
@@ -288,6 +281,7 @@ function ProductDetails() {
           style={{ width: "50px", height: "35px" }}
           type="color"
           name="color"
+          defaultValue={"#37a000"}
           value={values.color.hex}
           onChange={handleChange}
         />
@@ -300,13 +294,13 @@ function ProductDetails() {
       handleChange,
       value: values["color_name"],
     },
-    {
-      label: "Color details :",
-      placeholder: "Color details",
-      name: "color_details",
-      handleChange,
-      value: values["color_details"],
-    },
+    // {
+    //   label: "Color details :",
+    //   placeholder: "Color details",
+    //   name: "color_details",
+    //   handleChange,
+    //   value: values["color_details"],
+    // },
   ]
 
   useEffect(() => {
@@ -315,10 +309,10 @@ function ProductDetails() {
 
   return (
     <>
-      <FormComponent title={"Update Product"}>
+      <FormComponent title={"Add Product"}>
         <AddFormComponent
           hideCard
-          buttonTitle="Update"
+          hideButton
           title="Add Customer"
           DataCol1={DataCol1}
           DataCol2={DataCol2}
@@ -344,6 +338,12 @@ function ProductDetails() {
             options={options}
           />
         </div> */}
+
+        <ButtonComponent
+          style={{ width: "200px", float: "right", marginTop: 20 }}
+          // onClick={handleSubmit}
+          title={"Save"}
+        />
       </FormComponent>
 
       <Popup
@@ -366,9 +366,9 @@ function ProductDetails() {
             width={"60%"}
           />
         )}
-      ></Popup>
+      />
     </>
   )
 }
 
-export default ProductDetails
+export default AddProduct
