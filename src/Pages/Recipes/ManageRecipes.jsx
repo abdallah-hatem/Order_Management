@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
+import LoadingAnimation from "../../Web Components/LoadingAnimation/LoadingAnimation"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import { GET_PRODUCTS, GET_PRODUCT_BY_ID } from "../Products/Api"
 import { DELETE_RECIPE, GET_RECIPES, GET_RECIPE_BY_ID } from "./Api"
@@ -93,7 +94,7 @@ function ManageRecipes() {
     console.log(items, "items")
   }, [data, details, items])
 
-  return (
+  return !loading ? (
     <>
       <FormComponent title="Manage Recipes">
         <MasterTable
@@ -110,6 +111,8 @@ function ManageRecipes() {
         />
       </FormComponent>
     </>
+  ) : (
+    <LoadingAnimation />
   )
 }
 
