@@ -33,11 +33,9 @@ const RequestCard = ({ index, data, Delete, CheckRequest, OnEdit }) => {
           <div className="col ">
             {t("Items")} :
             <ul>
-              <li>item 1</li>
-              <li>item 3</li>
-              <li>item 4</li>
-              <li>item 5</li>
-              <li>item 6</li>
+              {data.items?.map((el) => (
+                <li>{el.name}</li>
+              ))}
             </ul>
             <div style={{ display: "flex" }}>
               <ButtonComponent title={"Accept"} />

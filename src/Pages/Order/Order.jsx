@@ -17,13 +17,14 @@ import RequestCard from "./Components/RequestCard"
 import EditPopUp from "./Components/EditPopUp"
 import PageLayout from "./Components/components/PageLayout/PageLayout"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
+import { GET_PRODUCTION_ORDERS } from "./Api2"
 // import LoadingPanel from "./components/components/LoadingPanel"
 const Order = () => {
   const { t, i18n } = useTranslation()
   const [editPopUp, setEditPopUp] = useState(false)
   const [selectedCard, setselectedCard] = useState(null)
   const [Search, setSearch] = useState("")
-  const [status, setstatus] = useState(false)
+  // const [status, setstatus] = useState(false)
   const defualtData = useRef({
     TotalCount: 0,
     PageSize: 2,
@@ -34,102 +35,25 @@ const Order = () => {
   })
   const [values, setValues] = useState(defualtData.current)
 
-  useEffect(() => {
-    if (Search.length > 0) {
-      GetSearchData(Search)
-    } else {
-      setValues(defualtData.current)
-      GetData(1)
-    }
-    return () => {}
-  }, [Search])
-  useEffect(() => {
-    setValues((prev) => ({ ...prev, loading: true }))
-    GET_REQUEST_DEMO(1, status)
-      .then((res) => {
-        console.log(res)
-        setValues((prev) => ({
-          ...res,
-          Data: [...res.Data],
-        }))
-      })
-      .catch((err) => {})
-      .finally(() => setValues((prev) => ({ ...prev, loading: false })))
-    return () => {}
-  }, [status])
-  const GetData = useCallback(
-    (index) => {
-      if (values.PageIndex < index) {
-        setValues((prev) => ({ ...prev, loading: true }))
-        GET_REQUEST_DEMO(index, status)
-          .then((res) => {
-            setValues((prev) => ({
-              ...res,
-              Data: [...values.Data, ...res.Data],
-            }))
-          })
-          .catch((err) => {})
-          .finally(() => setValues((prev) => ({ ...prev, loading: false })))
-      }
-    },
-    [values.Data, values.PageIndex, status]
-  )
-  const GetSearchData = useCallback(
-    (e) => {
-      setValues((prev) => ({ ...prev, loading: true }))
-      SEARCH(e, status)
-        .then((res) => {
-          setValues((prev) => ({
-            ...defualtData.current,
-            Data: res,
-          }))
-        })
-        .catch((err) => {})
-        .finally(() => setValues((prev) => ({ ...prev, loading: false })))
-    },
-    [status]
-  )
-  let Delete = useCallback(
-    async (element) => {
-      setValues((prev) => ({ ...prev, loading: true }))
-      DELETE_REQUEST_DEMO(element)
-        .then(() => {
-          setValues((prev) => ({
-            ...prev,
-            Data: prev.Data.filter(function (el) {
-              return el.Id !== element
-            }),
-          }))
-          notify({ message: t("Deleted Successfully"), width: 600 }, "success", 3000)
-        })
-        .catch(() => {
-          notify({ message: t("Failed Try again"), width: 600 }, "error", 3000)
-        })
-        .finally(() => setValues((prev) => ({ ...prev, loading: false })))
-    },
-    [t]
-  )
-  const CheckRequest = (e, data) =>
-    UPDATE_REQUEST_DEMO_STATUS({
-      ...data,
-      status: e.target.checked,
-    }).then(() => {
-      setValues((prev) => ({
-        ...prev,
-        Data: prev.Data.map((da) => {
-          return data.Id === da.Id ? { ...da, Status: !e.target.checked } : { ...da }
-        }),
-      }))
-    })
-  const ChangeData = (data) =>
-    setValues((prev) => ({
-      ...prev,
-      Data: prev.Data.map((da) => {
-        return data.Id === da.Id ? { ...data } : { ...da }
-      }),
-    }))
   const [loading, setloading] = useState(false)
   const onHiding = () => setloading(false)
+
+  ////////////////////////////////////////// 
+
+  const [orders, setOrders] = useState()
+  console.log(orders, "orders")
+
+  useEffect(() => {
+    GET_PRODUCTION_ORDERS().then((data) => setOrders(data))
+  }, [])
+
+  const cardData =
+    orders &&
+    orders.map((el) => ({
+      Date: el.date_order,
+      items: [{ name: "item1" }],
+    }))
+
   return (
     <div className="orders-cont">
       <FormComponent title={"Orders"} loading={loading} onHiding={onHiding}>
@@ -140,9 +64,9 @@ const Order = () => {
             setselectedCard(null)
           }, [])}
           data={selectedCard}
-          ChangeData={ChangeData}
+          // ChangeData={ChangeData}
         />
-        <Button
+        {/* <Button
           className="btn btn btn-success col-12"
           // disabled={!isValueChanged}
           type="button"
@@ -155,9 +79,9 @@ const Order = () => {
               status ? t("Is not Active") : t("Is Active")
             }
           </span>
-        </Button>
+        </Button> */}
 
-        <div class="form-group">
+        {/* <div class="form-group">
           <label for="pwd">{t("Search")}</label>
           <input
             type="text"
@@ -166,21 +90,14 @@ const Order = () => {
             id="pwd"
             style={{ height: "45px", fontSize: "20px" }}
           />
-        </div>
+        </div> */}
 
-        {[
-          { No: 1, Date: new Date() },
-          { No: 2, Date: new Date() },
-
-          { No: 3, Date: new Date() },
-
-          { No: 4, Date: new Date() },
-        ].map((data, index) => {
+        {cardData?.map((data, index) => {
           return (
             <RequestCard
-              Delete={Delete}
+              // Delete={Delete}
+              // CheckRequest={CheckRequest}
               data={data}
-              CheckRequest={CheckRequest}
               index={index}
               OnEdit={(e) => {
                 setEditPopUp(true)
@@ -194,7 +111,7 @@ const Order = () => {
           values.TotalCount > values.Data.length ? (
             <button
               type="button"
-              onClick={() => GetData(values.PageIndex + 1)}
+              // onClick={() => GetData(values.PageIndex + 1)}
               className="btn btn-outline-dark "
             >
               {t("More Posts")}

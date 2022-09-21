@@ -14,7 +14,6 @@ function ProductionOrder() {
 
   const defaultValues = useRef({
     number: "",
-    store: "",
     stock_id: "",
     note: "",
     date: "",

@@ -294,7 +294,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
 // import { ImageUploader } from "../../Web Components/ImageUploader/ImageUploader"
-import CheckboxGroup from "react-checkbox-group"
 import AddFormComponent from "../../Web Components/AddFormComponent/AddFormComponent"
 import {
   ADD_PRODUCT,
