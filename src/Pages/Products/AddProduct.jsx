@@ -5,26 +5,27 @@ import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import CheckboxGroup from "react-checkbox-group"
 import AddFormComponent from "../../Web Components/AddFormComponent/AddFormComponent"
 import { ADD_PRODUCT } from "./Api"
+import SearchBar from "../../Web Components/SearchBar/SearchBar"
+import { Popup } from "devextreme-react/popup"
+import { GET_UNITS } from "../Units/Api"
+import { GET_CATEGORY } from "../Categories/Api"
 
 function AddProduct() {
   const defaultValues = useRef({
     item_name: "",
     SN: "",
     model: "",
-    unit: "",
-    category: "",
+    unit_id: "",
+    category_id: 0,
     price: "",
     type: "",
     VAT: "",
     Barcode: "",
-    image: "",
-    igt: "",
-    product_details: "",
-    image_path: "",
-    // color: "#37a000",
-    color_name: "",
-    // color_details: "",
+    Details: "",
+    item_colors: [],
     item_Sizes: [],
+    // image_path: "",
+    // image: "",
   })
 
   const defaultSizeVals = useRef({
@@ -34,9 +35,42 @@ function AddProduct() {
     xl: false,
     xxl: false,
   })
+
+  ////////////// Colors ///////////////////
+
+  const defaultColorValues = useRef({
+    color_id: "",
+    color_name: "",
+  })
+  const [colorValues, setColorValues] = useState(defaultColorValues.current)
+  const [item_colors, setItem_colors] = useState([])
+  const [addedColors, setAddedColors] = useState([])
+
+  function handleColorSubmit() {
+    colorValues.color_id = Math.floor(Date.now() * Math.random())
+    setItem_colors((prev) => [...prev, colorValues])
+    setAddedColors((prev) => [...prev, colorValues.color_name])
+    setColorValues(() => ({ color_id: "#fffff", color_name: "" }))
+  }
+  const handleColorChange = useCallback((e) => {
+    setColorValues((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }, [])
+
+  useEffect(() => {
+    setValues((prev) => ({ ...prev, item_colors }))
+  }, [item_colors])
+
+  useEffect(() => {
+    console.log(item_colors)
+  }, [item_colors])
+
+  /////////////////////////////////
+
   const [sizeVals, setSizeVals] = useState(defaultSizeVals.current)
 
   const [values, setValues] = useState(defaultValues.current)
+
+  const [popUp, setPopUp] = useState(false)
 
   const handleChange = useCallback((e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -59,69 +93,60 @@ function AddProduct() {
     //   }
     // }
 
-    ADD_PRODUCT({
-      item_no: 0,
-      item_name: "sanf kham API",
-      SN: "700035",
-      model: "AKRAM",
-      unit_id: 0,
-      cat_id: 0,
-      price: 10.0,
-      type: 0,
-      VAT: 14,
-      Barcode: "146464784",
-      Details: "some details",
-      item_Sizes: [{ s: "true", m: "true", l: "true", xl: "true", xxl: "true" }],
-      item_colors: [
-        { color_id: 120, color_name: "Red" },
-        { color_id: 122, color_name: "Blue" },
-        { color_id: 144, color_name: "White" },
-      ],
-    })
+    // ADD_PRODUCT({
+    //   item_no: 0,
+    //   item_name: "sanf kham API",
+    //   SN: "700035",
+    //   model: "AKRAM",
+    //   unit_id: 0,
+    //   cat_id: 0,
+    //   price: 10.0,
+    //   type: 0,
+    //   VAT: 14,
+    //   Barcode: "146464784",
+    //   Details: "some details",
+    //   item_Sizes: [{ s: "true", m: "true", l: "true", xl: "true", xxl: "true" }],
+    //   item_colors: [
+    //     { color_id: 120, color_name: "Red" },
+    //     { color_id: 122, color_name: "Blue" },
+    //     { color_id: 144, color_name: "White" },
+    //   ],
+    // })
 
-    // ADD_PRODUCT(values)
+    ADD_PRODUCT(values)
   }
 
   const { t, i18n } = useTranslation()
 
-  const categoryOptions = [
-    {
-      label: "Electronics",
-      value: "electronics",
-    },
-    {
-      label: "Food",
-      value: "food",
-    },
-  ]
+  const [units, setUnits] = useState()
+  const [categories, setCategories] = useState()
 
-  const unitOptions = [
-    {
-      label: "Piece",
-      value: "piece",
-    },
-    {
-      label: "Lbs",
-      value: "lbs",
-    },
-    {
-      label: "KG",
-      value: "kg",
-    },
-  ]
+  // Get Units
+  useEffect(() => {
+    GET_UNITS().then((data) => setUnits(data))
+  }, [])
+
+  // Get Categories
+  useEffect(() => {
+    GET_CATEGORY().then((data) => setCategories(data))
+  }, [])
+
+  const categoryOptions = categories?.map((el) => ({ label: el.Name, value: el.id }))
+
+  const unitOptions = units?.map((el) => ({ label: el.Name, value: el.id }))
 
   const typeOptions = [
     {
       label: t("Raw Materials"),
-      value: "Raw Materials",
+      value: 0,
     },
     {
       label: t("Semi-raw Materials"),
-      value: "Semi-raw Materials",
+      value: 1,
     },
     {
       label: t("Final Product"),
-      value: "Final Product",
+      value: 2,
     },
   ]
 
@@ -151,9 +176,10 @@ function AddProduct() {
     {
       label: "Sale Price :",
       placeholder: "Sale Price",
-      handleChange,
       name: "price",
+      type: "number",
       value: values["price"],
+      handleChange,
     },
     // {
     //   label: "Image :",
@@ -163,13 +189,13 @@ function AddProduct() {
     //   value: values["image"],
     //   component: <ImageUploader />,
     // },
-    {
-      label: "IGT :",
-      placeholder: "IGT",
-      handleChange: handleChange,
-      name: "igt",
-      value: values["igt"],
-    },
+    // {
+    //   label: "IGT :",
+    //   placeholder: "IGT",
+    //   handleChange: handleChange,
+    //   name: "igt",
+    //   value: values["igt"],
+    // },
     {
       label: "Barcode / QR-code :",
       placeholder: "Barcode",
@@ -213,7 +239,7 @@ function AddProduct() {
       label: "Category :",
       placeholder: "Category",
       handleChange,
-      name: "category",
+      name: "category_id",
       chooseOptions: true,
       options: categoryOptions,
     },
@@ -221,7 +247,7 @@ function AddProduct() {
       label: "Unit :",
       placeholder: "Unit",
       handleChange,
-      name: "unit",
+      name: "unit_id",
       chooseOptions: true,
       options: unitOptions,
     },
@@ -229,8 +255,8 @@ function AddProduct() {
       label: "Product Details :",
       placeholder: "Product Details",
       handleChange,
-      name: "product_details",
-      value: values["product_details"],
+      name: "Details",
+      value: values["Details"],
       textArea: true,
     },
     {
@@ -244,42 +270,37 @@ function AddProduct() {
     {
       label: "Type :",
       placeholder: "Choose type",
-      handleChange,
-      name: "category",
+      name: "type",
       chooseOptions: true,
       options: typeOptions,
-    },
-    {
-      label: "Color Name :",
-      placeholder: "Color Name",
       handleChange,
-      name: "color_name",
-      value: values["color_name"],
     },
     // {
     //   label: "Color Name :",
-    //   component: <>Color</>,
+    //   placeholder: "Color Name",
+    //   handleChange,
+    //   name: "color_name",
+    //   value: values["color_name"],
     // },
-
-    // {
-    //   label: "Color :",
-    //   removeContainer: true,
-    //   component: (
-    //     <button
-    //       className="button-34"
-    //       style={{
-    //         backgroundColor: values.color,
-    //         border:"1px solid gray",
-    //         color: values.color === "#ffffff" && "gray",
-    //         // width:80,
-    //         // height:35
-    //       }}
-    //       onClick={() => setPopUp(true)}
-    //     >
-    //       {t("Add Color")}
-    //     </button>
-    //   ),
-    // },
+    {
+      label: "Color :",
+      removeContainer: true,
+      component: (
+        <button
+          className="button-34"
+          style={{
+            backgroundColor: colorValues.color,
+            border: "1px solid gray",
+            color: colorValues.color === "#ffffff" && "gray",
+            // width:80,
+            // height:35
+          }}
+          onClick={() => setPopUp(true)}
+        >
+          {t("Add Color")}
+        </button>
+      ),
+    },
   ]
 
   //////////// Tables ///////////////
@@ -304,35 +325,36 @@ function AddProduct() {
   //   },
   // ]
 
-  // const colorData = [
-  //   {
-  //     label: "Color :",
-  //     children: (
-  //       <input
-  //         style={{ width: "50px", height: "35px" }}
-  //         type="color"
-  //         name="color"
-  //         defaultValue={"#37a000"}
-  //         value={values.color.hex}
-  //         onChange={handleChange}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     label: "Color Name :",
-  //     placeholder: "Color Name",
-  //     name: "color_name",
-  //     handleChange,
-  //     value: values["color_name"],
-  //   },
-  //   // {
-  //   //   label: "Color details :",
-  //   //   placeholder: "Color details",
-  //   //   name: "color_details",
-  //   //   handleChange,
-  //   //   value: values["color_details"],
-  //   // },
-  // ]
+  const colorData = [
+    {
+      label: "Color :",
+      children: (
+        <input
+          style={{ width: "50px", height: "35px" }}
+          type="color"
+          name="color_id"
+          defaultValue={"#37a000"}
+          value={colorValues.color_id.hex}
+          onChange={handleColorChange}
+        />
+      ),
+    },
+    {
+      label: "Color Name :",
+      placeholder: "Color Name",
+      name: "color_name",
+      value: colorValues["color_name"],
+      handleChange: handleColorChange,
+    },
+    {
+      label: "Added Colors :",
+      placeholder: "Added Colors",
+      name: "added_colors",
+      value: addedColors,
+      textArea: true,
+      handleChange: handleColorChange,
+    },
+  ]
 
   useEffect(() => {
     console.log(values)
@@ -357,7 +379,7 @@ function AddProduct() {
         />
       </FormComponent>
 
-      {/* <Popup
+      <Popup
         title={t("Color")}
         height={"80vh"}
         visible={popUp}
@@ -367,17 +389,16 @@ function AddProduct() {
           <SearchBar
             listView
             hide
-            showButton={false}
             CardTitle="Add Inventory"
             data={colorData}
-            buttonTitle="Save"
-            handleSubmit={handleSubmit}
+            buttonTitle="Add"
+            handleSubmit={handleColorSubmit}
             colWidth="10"
             labelWidth="200px"
             width={"60%"}
           />
         )}
-      /> */}
+      />
     </>
   )
 }

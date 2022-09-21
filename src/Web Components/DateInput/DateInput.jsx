@@ -13,9 +13,9 @@ function DateInput({
 }) {
    useEffect(() => {
       function formattedDate(name) {
-         return `${!hideDays ? name.getDate() : ""}/${
+         return `${!hideDays ? name.getDate() : ""}-${
             name.getMonth() + 1
-         }/${name.getFullYear()}`;
+         }-${name.getFullYear()}`;
       }
 
       if (startDate > endDate) {

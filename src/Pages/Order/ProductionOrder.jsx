@@ -5,13 +5,9 @@ import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import SearchBar from "../../Web Components/SearchBar/SearchBar"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
-import {
-  ADD_INVENORY,
-  ADD_INVENTORY,
-  ADD_PRODUCTION_ORDER,
-  GET_INVENTORIES,
-} from "./Api2"
+import { ADD_PRODUCTION_ORDER } from "./Api2"
 import { GET_RECIPES, GET_RECIPE_BY_ID } from "../Recipes/Api"
+import { GET_INVENTORIES } from "../Inventory/Api"
 
 function ProductionOrder() {
   const { t } = useTranslation()
@@ -51,11 +47,11 @@ function ProductionOrder() {
 
   const [recipes, setRecipes] = useState()
   const [recipeDetails, setRecipeDetails] = useState()
-  console.log(recipeDetails)
+  const [stores, setStores] = useState()
 
   // Get Inventories
   useEffect(() => {
-    // GET_INVENTORIES().then((data) => console.log(data))
+    GET_INVENTORIES().then((data) => setStores(data))
   }, [])
 
   // Get Recipes
@@ -68,7 +64,7 @@ function ProductionOrder() {
     recipes?.map((el) =>
       GET_RECIPE_BY_ID(el.ID).then((data) => setRecipeDetails(data))
     )
-  }, [])
+  }, [recipes])
 
   const [startDate, setStartDate] = useState(new Date())
 
@@ -81,20 +77,7 @@ function ProductionOrder() {
     },
   ]
 
-  const options = [
-    {
-      label: "Store 1",
-      value: "Store 1",
-    },
-    {
-      label: "Store 2",
-      value: "Store 2",
-    },
-    {
-      label: "Store 3",
-      value: "Store 3",
-    },
-  ]
+  const storeOptions = stores?.map((el) => ({ label: el.Name, value: el.ID }))
 
   const recipeOptions = recipes?.map((el) => ({ label: el.Name, value: el.ID }))
 
@@ -118,25 +101,25 @@ function ProductionOrder() {
       label: "Number :",
       placeholder: "Number",
       name: "number",
-      handleChange,
       value: values["number"],
+      handleChange,
     },
     {
       label: "Store :",
       placeholder: "Select Option",
-      name: "store",
+      name: "stock_id",
+      value: values["stock_id"],
       chooseOptions: true,
-      options: options,
+      options: storeOptions,
       handleChange,
-      value: values["store"],
     },
     {
       label: "Note :",
       placeholder: "Note",
       name: "note",
+      value: values["note"],
       textArea: true,
       handleChange,
-      value: values["note"],
     },
   ]
 
@@ -166,15 +149,28 @@ function ProductionOrder() {
     },
   ]
 
+  const [finalData, setFinalData] = useState([])
+  console.log(finalData, "final Data")
+
   function handleTableData(e) {
     const tableData = e.changes[0].data
     delete tableData.__KEY__
 
-    const cost = recipeDetails?.filter((el) => tableData.recipe === el.ID_TRKEBA)[0].Cost
-    
+    let cost = recipeDetails?.filter((el) => tableData.recipe === el.ID_TRKEBA)[0]
+      .Cost
+
+    tableData.cost = cost
+
+    setFinalData((prev) => [...prev, tableData])
 
     console.log(tableData)
   }
+
+  useEffect(() => {
+    const final2 = finalData.map((el) => ({ trkeba_id: el.recipe, cost: el.cost }))
+
+    setValues((prev) => ({ ...prev, Production_Subs: final2 }))
+  }, [finalData])
 
   useEffect(() => {
     console.log(values)
@@ -204,9 +200,9 @@ function ProductionOrder() {
         searchPanel={false}
         columnChooser={false}
         onSaving={(e) => handleTableData(e)}
-        // dataSource={tableValues}
+        dataSource={finalData}
         colAttributes={columns}
-        options={options}
+        options={recipeOptions}
         // onCellClick={(e) => console.log(e.value)}
       />
 

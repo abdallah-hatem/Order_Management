@@ -5,10 +5,30 @@ import { DELETE_UNIT, GET_UNITS } from "./Api"
 
 function ManageUnits() {
   const [data, setData] = useState()
+  const [updatedData, setUpdatedData] = useState("")
 
+  // Get Units
   useEffect(() => {
     GET_UNITS().then((data) => setData(data))
   }, [])
+
+  function handleDelete(e) {
+    const id = e.data.id
+    DELETE_UNIT(id)
+  }
+
+  ///// Handle Update//////
+  function handleUpdate(e) {
+    const updatedData = e.changes[0].key
+    setUpdatedData(updatedData)
+    console.log(updatedData)
+  }
+
+  useEffect(() => {
+    delete updatedData.stock_typ
+    setUpdatedData(updatedData)
+  }, [updatedData])
+  //////////////////
 
   const columns = [
     {
@@ -23,11 +43,6 @@ function ManageUnits() {
     },
   ]
 
-  function handleDelete(e) {
-    const id = e.data.id
-    DELETE_UNIT(id)
-  }
-
   useEffect(() => {
     data && console.log(data)
   }, [data])
@@ -41,6 +56,7 @@ function ManageUnits() {
         editingMode="popup"
         popupTitle="Update Units"
         onRowRemoving={(e) => handleDelete(e)}
+        onSaving={(e) => handleUpdate(e)}
         searchPanel={false}
         columnChooser={false}
         dataSource={data}
