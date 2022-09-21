@@ -1,44 +1,44 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import AddFormComponent from "../../Web Components/AddFormComponent/AddFormComponent"
-import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import { ImageUploader } from "../../Web Components/ImageUploader/ImageUploader"
-import InputComponent from "../../Web Components/InputComponent/InputComponent"
-import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import CheckboxGroup from "react-checkbox-group"
-import SearchBar from "../../Web Components/SearchBar/SearchBar"
-import InputColor from "react-input-color"
-import { Popup } from "devextreme-react/popup"
-import { GET_PRODUCT_BY_ID, UPDATE_PRODUCT } from "../../Services/Api/Api"
+import { useParams } from "react-router-dom"
+import { GET_PRODUCTS_COLORS, GET_PRODUCT_BY_ID } from "./Api"
 
 function ProductDetails() {
-  const defaultValues = useRef({
-    barcode: "",
-    product_name: "",
-    model: "",
-    sale_price: "",
-    image: "",
-    igt: "",
-    sn: "",
-    category: "",
-    type: "",
-    unit: "",
-    vat: "",
-    product_details: "",
-    image_path: "",
-    color: {},
-    color_name: "",
-    color_details: "",
-    sizes: [],
-  })
+  // const defaultValues = useRef({
+  //   item_name: "",
+  //   SN: "",
+  //   model: "",
+  //   unit: "",
+  //   category: "",
+  //   price: "",
+  //   type: "",
+  //   VAT: "",
+  //   Barcode: "",
+  //   image: "",
+  //   igt: "",
+  //   Details: "",
+  //   image_path: "",
+  //   // color: "#37a000",
+  //   color_name: "",
+  //   // color_details: "",
+  //   sizes: [],
+  // })
 
-  const [values, setValues] = useState(defaultValues.current)
+  const [values, setValues] = useState({})
   const [sizes, setSizes] = useState([])
-  const [popUp, setPopUp] = useState(false)
+  console.log(sizes)
+
+  const { id } = useParams()
 
   useEffect(() => {
-    // GET_PRODUCT_BY_ID().then((data) => setValues(data))
+    GET_PRODUCT_BY_ID(id).then((data) => setValues(data[0]))
+    GET_PRODUCTS_COLORS(id).then((data) => console.log(data, "COLORS"))
+
+    // GET_PRODUCT_BY_ID(id).then((data) => console.log(data))
   }, [])
 
   const handleChange = useCallback((e) => {
@@ -46,35 +46,19 @@ function ProductDetails() {
   }, [])
 
   useEffect(() => {
-    setValues((prev) => ({ ...prev, sizes }))
+    setValues((prev) => ({ ...prev, item_sizes: sizes }))
   }, [sizes])
 
   function handleSubmit(e) {
-    for (const [key, value] of Object.entries(values)) {
-      if (!value) {
-        alert(t("Fill the inputs"))
-      }
-    }
-
+    // for (const [key, value] of Object.entries(values)) {
+    //   if (!value) {
+    //     alert(t("Fill the inputs"))
+    //   }
+    // }
     // UPDATE_PRODUCT(id, values)
   }
 
   const { t, i18n } = useTranslation()
-
-  const options = [
-    {
-      label: "Sam",
-      value: "Sam",
-    },
-    {
-      label: "Mike",
-      value: "Mike",
-    },
-    {
-      label: "Jack",
-      value: "Jack",
-    },
-  ]
 
   const categoryOptions = [
     {
@@ -117,15 +101,21 @@ function ProductDetails() {
     },
   ]
 
-  const sizeValues = ["XXLarge", "XLarge", "Large", "Medium", "Small"]
+  const sizeValues = [
+    { name: "xxl", label: "XXLarge", value: values.xxl },
+    { name: "xl", label: "XLarge", value: values.xl },
+    { name: "l", label: "Large", value: values.l },
+    { name: "m", label: "Medium", value: values.m },
+    { name: "s", label: "Small", value: values.s },
+  ]
 
   const DataCol1 = [
     {
       label: "Product Name :",
       placeholder: "Product Name",
       handleChange,
-      name: "product_name",
-      value: values["product_name"],
+      name: "item_name",
+      value: values["item_name"],
     },
     {
       label: "Model :",
@@ -138,39 +128,39 @@ function ProductDetails() {
       label: "Sale Price :",
       placeholder: "Sale Price",
       handleChange,
-      name: "sale_price",
-      value: values["sale_price"],
+      name: "price",
+      value: values["price"],
     },
-    {
-      removeContainer: true,
-      component: (
-        <img
-          style={{ height: 180, width: 180 }}
-          src="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHRzaGlydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-          alt="pic"
-        ></img>
-      ),
-    },
-    {
-      label: "Image :",
-      // placeholder: "Image",
-      handleChange: handleChange,
-      name: "image",
-      value: values["image"],
-      component: <ImageUploader />,
-    },
-    {
-      label: "IGT :",
-      placeholder: "IGT",
-      handleChange: handleChange,
-      name: "igt",
-      value: values["igt"],
-    },
+    // {
+    //   removeContainer: true,
+    //   component: (
+    //     <img
+    //       style={{ height: 180, width: 180 }}
+    //       src="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHRzaGlydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+    //       alt="pic"
+    //     ></img>
+    //   ),
+    // },
+    // {
+    //   label: "Image :",
+    //   // placeholder: "Image",
+    //   handleChange: handleChange,
+    //   name: "image",
+    //   value: values["image"],
+    //   component: <ImageUploader />,
+    // },
+    // {
+    //   label: "IGT :",
+    //   placeholder: "IGT",
+    //   handleChange: handleChange,
+    //   name: "igt",
+    //   value: values["igt"],
+    // },
     {
       label: "Barcode / QR-code :",
       placeholder: "Barcode",
-      name: "barcode",
-      value: values["barcode"],
+      name: "Barcode",
+      value: values["Barcode"],
       handleChange: handleChange,
     },
     {
@@ -184,7 +174,15 @@ function ProductDetails() {
               <div className="d-flex justify-content-between flex-wrap">
                 {sizeValues.map((el) => (
                   <label style={{ minWidth: "100px", cursor: "pointer" }}>
-                    <Checkbox value={el} /> {el}
+                    <Checkbox value={el.value} /> {el.label}
+                    {/* <input
+                      type="checkbox"
+                      name={el.name}
+                      defaultChecked={el.value}
+                      value={el.value}
+                      // onChange={(e) => setSizes(e.target.value)}
+                    />
+                    {el.label} */}
                   </label>
                 ))}
               </div>
@@ -200,8 +198,8 @@ function ProductDetails() {
       label: "SN :",
       placeholder: "SN",
       handleChange,
-      name: "sn",
-      value: values["sn"],
+      name: "SN",
+      value: values["SN"],
     },
     {
       label: "Category :",
@@ -223,17 +221,17 @@ function ProductDetails() {
       label: "Product Details :",
       placeholder: "Product Details",
       handleChange,
-      name: "product_details",
-      value: values["product_details"],
+      name: "Details",
+      value: values["Details"],
       textArea: true,
     },
     {
       label: "VAT :",
       placeholder: "VAT",
       handleChange,
-      name: "vat",
+      name: "VAT",
       type: "number",
-      value: values["vat"],
+      value: values["VAT"],
     },
     {
       label: "Type :",
@@ -244,69 +242,31 @@ function ProductDetails() {
       options: typeOptions,
     },
     {
-      label: "Color :",
-      removeContainer: true,
-      component: (
-        <button
-          className="button-34"
-          style={{ backgroundColor: values.color }}
-          onClick={() => setPopUp(true)}
-        >
-          {t("Add Color")}
-        </button>
-      ),
-    },
-  ]
-
-  //////////// Tables ///////////////
-
-  const columns = [
-    {
-      field: "supplier",
-      caption: "Supplier",
-      options,
-    },
-    {
-      field: "supplier_price",
-      caption: "Supplier Price",
-      dataType: "number",
-    },
-  ]
-
-  const data = [
-    {
-      supplier: "",
-      supplier_price: "",
-    },
-  ]
-
-  const colorData = [
-    {
-      label: "Color :",
-      children: (
-        <input
-          style={{ width: "50px", height: "35px" }}
-          type="color"
-          name="color"
-          value={values.color.hex}
-          onChange={handleChange}
-        />
-      ),
-    },
-    {
       label: "Color Name :",
       placeholder: "Color Name",
-      name: "color_name",
       handleChange,
+      name: "color_name",
       value: values["color_name"],
     },
-    {
-      label: "Color details :",
-      placeholder: "Color details",
-      name: "color_details",
-      handleChange,
-      value: values["color_details"],
-    },
+    // {
+    //   label: "Color :",
+    //   removeContainer: true,
+    //   component: (
+    //     <button
+    //       className="button-34"
+    //       style={{
+    //         backgroundColor: values.color,
+    //         border:"1px solid gray",
+    //         color: values.color === "#ffffff" && "gray",
+    //         // width:80,
+    //         // height:35
+    //       }}
+    //       onClick={() => setPopUp(true)}
+    //     >
+    //       {t("Add Color")}
+    //     </button>
+    //   ),
+    // },
   ]
 
   useEffect(() => {
@@ -330,43 +290,7 @@ function ProductDetails() {
           labelWidth="100%"
           width={"100%"}
         />
-
-        {/* <div className="mt-5">
-          <MasterTable
-            allowAdd
-            allowDelete
-            allowUpdate
-            ColoredRows
-            searchPanel={false}
-            columnChooser={false}
-            dataSource={data}
-            colAttributes={columns}
-            options={options}
-          />
-        </div> */}
       </FormComponent>
-
-      <Popup
-        title={t("Color")}
-        height={"80vh"}
-        visible={popUp}
-        hideOnOutsideClick
-        onHiding={() => setPopUp(false)}
-        contentRender={() => (
-          <SearchBar
-            listView
-            hide
-            showButton={false}
-            CardTitle="Add Inventory"
-            data={colorData}
-            buttonTitle="Save"
-            handleSubmit={handleSubmit}
-            colWidth="10"
-            labelWidth="200px"
-            width={"60%"}
-          />
-        )}
-      ></Popup>
     </>
   )
 }

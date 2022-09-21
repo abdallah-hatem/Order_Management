@@ -1,17 +1,11 @@
-import React, {
-  useState,
-  useEffect,
-  createRef,
-  useMemo,
-  useCallback,
-} from "react";
-import ExcelJS from "exceljs";
-import saveAs from "file-saver";
-import { exportDataGrid } from "devextreme/excel_exporter";
-import CustomStore from "devextreme/data/custom_store";
-import { alert } from "devextreme/ui/dialog";
-import "devextreme/dist/css/dx.light.css";
-import "devextreme-react/text-area";
+import React, { useState, useEffect, createRef, useMemo, useCallback } from "react"
+import ExcelJS from "exceljs"
+import saveAs from "file-saver"
+import { exportDataGrid } from "devextreme/excel_exporter"
+import CustomStore from "devextreme/data/custom_store"
+import { alert } from "devextreme/ui/dialog"
+import "devextreme/dist/css/dx.light.css"
+import "devextreme-react/text-area"
 
 import {
   Column,
@@ -44,15 +38,15 @@ import {
   Form,
   Item,
   Popup,
-} from "devextreme-react/data-grid";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
-import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
+} from "devextreme-react/data-grid"
+import { jsPDF } from "jspdf"
+import "jspdf-autotable"
+import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter"
 // import { GET_SEARCH_ITEMS } from "../../../Services/ApiServices/ItemsAPI";
-import { useTranslation } from "react-i18next";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next"
+import { t } from "i18next"
 
-const dataGridRef = React.createRef();
+const dataGridRef = React.createRef()
 
 function MasterTable({
   id = "",
@@ -131,28 +125,28 @@ function MasterTable({
   onCellClick,
   popupTitle = "pop-up Title",
 }) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation()
 
   const sqlStatementGenerator = useCallback((data) => {
     if (data[1] !== "and") {
-      data[0] = data[0].replace("~", ".");
-      data[1] = data[1].includes("not") ? "not like" : "like";
-      data[2] = "'%" + data[2] + "%'";
-      data = data.join(" ");
-      return data;
+      data[0] = data[0].replace("~", ".")
+      data[1] = data[1].includes("not") ? "not like" : "like"
+      data[2] = "'%" + data[2] + "%'"
+      data = data.join(" ")
+      return data
     } else {
-      let temp = "";
+      let temp = ""
       for (let i = 0; i < data.length; i += 2) {
-        let element = data[i];
-        element[0] = element[0].replace("~", ".");
-        element[1] = element[1].includes("<>" || "not") ? "not like" : "like";
-        element[2] = "'%" + element[2] + "%'";
-        element = element.join(" ");
-        temp += i + 2 < data.length ? element + " and " : element;
+        let element = data[i]
+        element[0] = element[0].replace("~", ".")
+        element[1] = element[1].includes("<>" || "not") ? "not like" : "like"
+        element[2] = "'%" + element[2] + "%'"
+        element = element.join(" ")
+        temp += i + 2 < data.length ? element + " and " : element
       }
-      return temp;
+      return temp
     }
-  }, []);
+  }, [])
 
   // Store of API data
   const store = useMemo(
@@ -165,9 +159,7 @@ function MasterTable({
         load: function ({ skip = 0, take = 20, filter, userData }) {
           // Create a filter sql statement
           let FilterQuery =
-            filter !== undefined && filterRow
-              ? sqlStatementGenerator(filter)
-              : "";
+            filter !== undefined && filterRow ? sqlStatementGenerator(filter) : ""
           // API method
           return (
             userData &&
@@ -177,7 +169,7 @@ function MasterTable({
               take,
               FilterQuery,
             }).then((data) => {
-              otherMethod && otherMethod(data);
+              otherMethod && otherMethod(data)
               // Return must be in this structure
               return {
                 // Array of data that will shown in table
@@ -186,12 +178,12 @@ function MasterTable({
                 totalCount: data.totalCount ? data.totalCount : 0,
 
                 summary: data.summary,
-              };
+              }
             })
-          );
+          )
         },
         remove: (key) => {
-          removeApiMethod && removeApiMethod({ ...key, ...removeApiPayload });
+          removeApiMethod && removeApiMethod({ ...key, ...removeApiPayload })
         },
       }),
     [
@@ -204,9 +196,9 @@ function MasterTable({
       removeApiPayload,
       sqlStatementGenerator,
     ]
-  );
+  )
 
-  let data = remoteOperations ? store : dataSource;
+  let data = remoteOperations ? store : dataSource
 
   return (
     <React.Fragment>
@@ -347,7 +339,7 @@ function MasterTable({
                   />
                 )}
               </Column>
-            );
+            )
           })}
         {children}
         <Export
@@ -371,7 +363,7 @@ function MasterTable({
                   customizeText={item.customizeText}
                   alignment={item.alignment}
                 />
-              );
+              )
             })}
             {tableGroupSummary.map((groupItem) => {
               return (
@@ -383,17 +375,17 @@ function MasterTable({
                   alignByColumn={groupItem.alignByColumn}
                   showInColumn={groupItem.showInColumn}
                 />
-              );
+              )
             })}
           </Summary>
         )}
       </DataGrid>
     </React.Fragment>
-  );
+  )
 }
 
 const onToolbarPreparing = (e) => {
-  let toolbarItems = e.toolbarOptions.items;
+  let toolbarItems = e.toolbarOptions.items
   // Modifies an existing item
   // toolbarItems.forEach(function (item) {
   // 	if (item.name === "exportButton") {
@@ -414,24 +406,24 @@ const onToolbarPreparing = (e) => {
       icon: "exportpdf",
       hint: t("Print"),
       onClick: function () {
-        const doc = new jsPDF();
-        const dataGrid = dataGridRef.current.instance;
-        console.log(dataGrid);
+        const doc = new jsPDF()
+        const dataGrid = dataGridRef.current.instance
+        console.log(dataGrid)
         exportDataGridToPdf({
           jsPDFDocument: doc,
           component: dataGrid,
         }).then(() => {
-          doc.save("grid.pdf");
-        });
+          doc.save("grid.pdf")
+        })
       },
     },
     location: "after",
-  });
-};
+  })
+}
 
 const onExportingHandle = (e) => {
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet("Main sheet");
+  const workbook = new ExcelJS.Workbook()
+  const worksheet = workbook.addWorksheet("Main sheet")
 
   exportDataGrid({
     component: e.component,
@@ -442,10 +434,10 @@ const onExportingHandle = (e) => {
       saveAs(
         new Blob([buffer], { type: "application/octet-stream" }),
         "DataGrid.xlsx"
-      );
-    });
-  });
-  e.cancel = true;
-};
+      )
+    })
+  })
+  e.cancel = true
+}
 
-export default React.memo(MasterTable);
+export default React.memo(MasterTable)

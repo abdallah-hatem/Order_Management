@@ -1,77 +1,88 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
-import { ImageUploader } from "../../Web Components/ImageUploader/ImageUploader"
-import InputComponent from "../../Web Components/InputComponent/InputComponent"
-import MasterTable from "../../Web Components/MasterTable/MasterTable"
+// import { ImageUploader } from "../../Web Components/ImageUploader/ImageUploader"
 import CheckboxGroup from "react-checkbox-group"
-import SearchBar from "../../Web Components/SearchBar/SearchBar"
-import InputColor from "react-input-color"
-import { Popup } from "devextreme-react/popup"
-import { ADD_PRODUCT } from "../../Services/Api/Api"
 import AddFormComponent from "../../Web Components/AddFormComponent/AddFormComponent"
+import { ADD_PRODUCT } from "./Api"
 
 function AddProduct() {
   const defaultValues = useRef({
-    barcode: "",
-    product_name: "",
+    item_name: "",
+    SN: "",
     model: "",
-    sale_price: "",
+    unit: "",
+    category: "",
+    price: "",
+    type: "",
+    VAT: "",
+    Barcode: "",
     image: "",
     igt: "",
-    sn: "",
-    category: "",
-    type: "",
-    unit: "",
-    vat: "",
     product_details: "",
     image_path: "",
-    color: "#37a000",
+    // color: "#37a000",
     color_name: "",
-    color_details: "",
-    sizes: [],
+    // color_details: "",
+    item_Sizes: [],
   })
 
-  const [values, setValues] = useState(defaultValues.current)
-  const [sizes, setSizes] = useState([])
+  const defaultSizeVals = useRef({
+    s: false,
+    m: false,
+    l: false,
+    xl: false,
+    xxl: false,
+  })
+  const [sizeVals, setSizeVals] = useState(defaultSizeVals.current)
 
-  const [popUp, setPopUp] = useState(false)
+  const [values, setValues] = useState(defaultValues.current)
 
   const handleChange = useCallback((e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }, [])
 
+  function handleSizeChange(e, el) {
+    setSizeVals((prev) => ({
+      ...prev,
+      [e.target.name]: !sizeVals[`${el.name}`],
+    }))
+  }
   useEffect(() => {
-    setValues((prev) => ({ ...prev, sizes }))
-  }, [sizes])
+    setValues((prev) => ({ ...prev, item_Sizes: [sizeVals] }))
+  }, [sizeVals])
 
   function handleSubmit(e) {
-    for (const [key, value] of Object.entries(values)) {
-      if (!value) {
-        alert(t("Fill the inputs"))
-      }
-    }
+    // for (const [key, value] of Object.entries(values)) {
+    //   if (!value) {
+    //     alert(t("Fill the inputs"))
+    //   }
+    // }
+
+    ADD_PRODUCT({
+      item_no: 0,
+      item_name: "sanf kham API",
+      SN: "700035",
+      model: "AKRAM",
+      unit_id: 0,
+      cat_id: 0,
+      price: 10.0,
+      type: 0,
+      VAT: 14,
+      Barcode: "146464784",
+      Details: "some details",
+      item_Sizes: [{ s: "true", m: "true", l: "true", xl: "true", xxl: "true" }],
+      item_colors: [
+        { color_id: 120, color_name: "Red" },
+        { color_id: 122, color_name: "Blue" },
+        { color_id: 144, color_name: "White" },
+      ],
+    })
 
     // ADD_PRODUCT(values)
   }
 
   const { t, i18n } = useTranslation()
-
-  const options = [
-    {
-      label: "Sam",
-      value: "Sam",
-    },
-    {
-      label: "Mike",
-      value: "Mike",
-    },
-    {
-      label: "Jack",
-      value: "Jack",
-    },
-  ]
 
   const categoryOptions = [
     {
@@ -114,15 +125,21 @@ function AddProduct() {
     },
   ]
 
-  const sizeValues = ["XXLarge", "XLarge", "Large", "Medium", "Small"]
+  const sizeValues = [
+    { name: "xxl", label: "XXLarge" },
+    { name: "xl", label: "XLarge" },
+    { name: "l", label: "Large" },
+    { name: "m", label: "Medium" },
+    { name: "s", label: "Small" },
+  ]
 
   const DataCol1 = [
     {
       label: "Product Name :",
       placeholder: "Product Name",
       handleChange,
-      name: "product_name",
-      value: values["product_name"],
+      name: "item_name",
+      value: values["item_name"],
     },
     {
       label: "Model :",
@@ -135,17 +152,17 @@ function AddProduct() {
       label: "Sale Price :",
       placeholder: "Sale Price",
       handleChange,
-      name: "sale_price",
-      value: values["sale_price"],
+      name: "price",
+      value: values["price"],
     },
-    {
-      label: "Image :",
-      // placeholder: "Image",
-      handleChange: handleChange,
-      name: "image",
-      value: values["image"],
-      component: <ImageUploader />,
-    },
+    // {
+    //   label: "Image :",
+    //   // placeholder: "Image",
+    //   handleChange: handleChange,
+    //   name: "image",
+    //   value: values["image"],
+    //   component: <ImageUploader />,
+    // },
     {
       label: "IGT :",
       placeholder: "IGT",
@@ -156,8 +173,8 @@ function AddProduct() {
     {
       label: "Barcode / QR-code :",
       placeholder: "Barcode",
-      name: "barcode",
-      value: values["barcode"],
+      name: "Barcode",
+      value: values["Barcode"],
       handleChange: handleChange,
     },
     {
@@ -166,17 +183,19 @@ function AddProduct() {
       removeContainer: true,
       component: (
         <div className="border p-2 rounded">
-          <CheckboxGroup name="sizes" value={sizes} onChange={setSizes}>
-            {(Checkbox) => (
-              <div className="d-flex justify-content-between flex-wrap">
-                {sizeValues.map((el) => (
-                  <label style={{ minWidth: "100px", cursor: "pointer" }}>
-                    <Checkbox value={el} /> {el}
-                  </label>
-                ))}
-              </div>
-            )}
-          </CheckboxGroup>
+          <div className="d-flex justify-content-between flex-wrap">
+            {sizeValues.map((el) => (
+              <label style={{ minWidth: "100px", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  name={el.name}
+                  value={sizeVals[`${el.name}`]}
+                  onChange={(e) => handleSizeChange(e, el)}
+                />
+                {el.label}
+              </label>
+            ))}
+          </div>
         </div>
       ),
     },
@@ -187,8 +206,8 @@ function AddProduct() {
       label: "SN :",
       placeholder: "SN",
       handleChange,
-      name: "sn",
-      value: values["sn"],
+      name: "SN",
+      value: values["SN"],
     },
     {
       label: "Category :",
@@ -218,9 +237,9 @@ function AddProduct() {
       label: "VAT :",
       placeholder: "VAT",
       handleChange,
-      name: "vat",
+      name: "VAT",
       type: "number",
-      value: values["vat"],
+      value: values["VAT"],
     },
     {
       label: "Type :",
@@ -231,77 +250,89 @@ function AddProduct() {
       options: typeOptions,
     },
     {
-      label: "Color :",
-      removeContainer: true,
-      component: (
-        <button
-          className="button-34"
-          style={{
-            backgroundColor: values.color,
-            border:"1px solid gray",
-            color: values.color === "#ffffff" && "gray",
-            // width:80,
-            // height:35
-          }}
-          onClick={() => setPopUp(true)}
-        >
-          {t("Add Color")}
-        </button>
-      ),
+      label: "Color Name :",
+      placeholder: "Color Name",
+      handleChange,
+      name: "color_name",
+      value: values["color_name"],
     },
+    // {
+    //   label: "Color Name :",
+    //   component: <>Color</>,
+    // },
+
+    // {
+    //   label: "Color :",
+    //   removeContainer: true,
+    //   component: (
+    //     <button
+    //       className="button-34"
+    //       style={{
+    //         backgroundColor: values.color,
+    //         border:"1px solid gray",
+    //         color: values.color === "#ffffff" && "gray",
+    //         // width:80,
+    //         // height:35
+    //       }}
+    //       onClick={() => setPopUp(true)}
+    //     >
+    //       {t("Add Color")}
+    //     </button>
+    //   ),
+    // },
   ]
 
   //////////// Tables ///////////////
 
-  const columns = [
-    {
-      field: "supplier",
-      caption: "Supplier",
-      options,
-    },
-    {
-      field: "supplier_price",
-      caption: "Supplier Price",
-      dataType: "number",
-    },
-  ]
+  // const columns = [
+  //   {
+  //     field: "supplier",
+  //     caption: "Supplier",
+  //     options,
+  //   },
+  //   {
+  //     field: "supplier_price",
+  //     caption: "Supplier Price",
+  //     dataType: "number",
+  //   },
+  // ]
 
-  const data = [
-    {
-      supplier: "",
-      supplier_price: "",
-    },
-  ]
+  // const data = [
+  //   {
+  //     supplier: "",
+  //     supplier_price: "",
+  //   },
+  // ]
 
-  const colorData = [
-    {
-      label: "Color :",
-      children: (
-        <input
-          style={{ width: "50px", height: "35px" }}
-          type="color"
-          name="color"
-          defaultValue={"#37a000"}
-          value={values.color.hex}
-          onChange={handleChange}
-        />
-      ),
-    },
-    {
-      label: "Color Name :",
-      placeholder: "Color Name",
-      name: "color_name",
-      handleChange,
-      value: values["color_name"],
-    },
-    // {
-    //   label: "Color details :",
-    //   placeholder: "Color details",
-    //   name: "color_details",
-    //   handleChange,
-    //   value: values["color_details"],
-    // },
-  ]
+  // const colorData = [
+  //   {
+  //     label: "Color :",
+  //     children: (
+  //       <input
+  //         style={{ width: "50px", height: "35px" }}
+  //         type="color"
+  //         name="color"
+  //         defaultValue={"#37a000"}
+  //         value={values.color.hex}
+  //         onChange={handleChange}
+  //       />
+  //     ),
+  //   },
+  //   {
+  //     label: "Color Name :",
+  //     placeholder: "Color Name",
+  //     name: "color_name",
+  //     handleChange,
+  //     value: values["color_name"],
+  //   },
+  //   // {
+  //   //   label: "Color details :",
+  //   //   placeholder: "Color details",
+  //   //   name: "color_details",
+  //   //   handleChange,
+  //   //   value: values["color_details"],
+  //   // },
+  // ]
 
   useEffect(() => {
     console.log(values)
@@ -312,7 +343,7 @@ function AddProduct() {
       <FormComponent title={"Add Product"}>
         <AddFormComponent
           hideCard
-          hideButton
+          buttonTitle="Save"
           title="Add Customer"
           DataCol1={DataCol1}
           DataCol2={DataCol2}
@@ -324,29 +355,9 @@ function AddProduct() {
           labelWidth="100%"
           width={"100%"}
         />
-
-        {/* <div className="mt-5">
-          <MasterTable
-            allowAdd
-            allowDelete
-            allowUpdate
-            ColoredRows
-            searchPanel={false}
-            columnChooser={false}
-            dataSource={data}
-            colAttributes={columns}
-            options={options}
-          />
-        </div> */}
-
-        <ButtonComponent
-          style={{ width: "200px", float: "right", marginTop: 20 }}
-          // onClick={handleSubmit}
-          title={"Save"}
-        />
       </FormComponent>
 
-      <Popup
+      {/* <Popup
         title={t("Color")}
         height={"80vh"}
         visible={popUp}
@@ -366,7 +377,7 @@ function AddProduct() {
             width={"60%"}
           />
         )}
-      />
+      /> */}
     </>
   )
 }

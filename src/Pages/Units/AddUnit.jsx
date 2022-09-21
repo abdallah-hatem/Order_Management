@@ -1,14 +1,11 @@
 import React, { useCallback, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import SearchBar from "../../Web Components/SearchBar/SearchBar"
-import { ADD_INVENTORY } from "./Api"
+import { ADD_UNIT } from "./Api"
 
-function AddInventory() {
-  const { t, i18n } = useTranslation()
-
+function AddUnit() {
   const defaultValues = useRef({
-    name: "",
-    stock_typ: "",
+    unit_name: "",
   })
 
   const [values, setValues] = useState(defaultValues.current)
@@ -24,22 +21,15 @@ function AddInventory() {
     //   }
     // }
 
-    ADD_INVENTORY(values)
+    ADD_UNIT(values)
   }
 
-  const inventoryData = [
+  const data = [
     {
-      label: "Inventory Name :",
-      placeholder: "Inventory Name",
-      name: "name",
-      value: values["name"],
-      handleChange,
-    },
-    {
-      label: "Inventory Type :",
-      placeholder: "Inventory Type",
-      name: "stock_typ",
-      value: values["stock_typ"],
+      label: "Unit Name :",
+      placeholder: "Unit Name",
+      name: "unit_name",
+      value: values["unit_name"],
       handleChange,
     },
   ]
@@ -47,9 +37,9 @@ function AddInventory() {
   return (
     <SearchBar
       listView
-      CardTitle="Add Inventory"
+      CardTitle="Add Unit"
       hideCard={false}
-      data={inventoryData}
+      data={data}
       buttonTitle="Add"
       handleSubmit={handleSubmit}
       colWidth="10"
@@ -59,4 +49,4 @@ function AddInventory() {
   )
 }
 
-export default AddInventory
+export default AddUnit

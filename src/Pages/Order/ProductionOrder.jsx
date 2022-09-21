@@ -5,7 +5,13 @@ import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import SearchBar from "../../Web Components/SearchBar/SearchBar"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
-import { GET_PRODUCTS } from "../../Services/Api/Api"
+import {
+  ADD_INVENORY,
+  ADD_INVENTORY,
+  ADD_PRODUCTION_ORDER,
+  GET_INVENTORIES,
+} from "./Api2"
+import { GET_RECIPES, GET_RECIPE_BY_ID } from "../Recipes/Api"
 
 function ProductionOrder() {
   const { t } = useTranslation()
@@ -13,8 +19,10 @@ function ProductionOrder() {
   const defaultValues = useRef({
     number: "",
     store: "",
+    stock_id: "",
     note: "",
     date: "",
+    Production_Subs: [{}],
   })
 
   const [values, setValues] = useState(defaultValues.current)
@@ -29,10 +37,37 @@ function ProductionOrder() {
         alert(t("Fill the inputs"))
       }
     }
+
+    ADD_PRODUCTION_ORDER({
+      number: 220919,
+      stock_id: 101,
+      cust_id: 1,
+      date: "2022-09-19",
+      Production_Subs: [
+        { ID: 0, Production_id: 0, trkeba_id: 1001, QTY: 100, COST: 10000.0 },
+      ],
+    })
   }
 
+  const [recipes, setRecipes] = useState()
+  const [recipeDetails, setRecipeDetails] = useState()
+  console.log(recipeDetails)
+
+  // Get Inventories
   useEffect(() => {
-    // GET_PRODUCTS().then((data) => console.log(data))
+    // GET_INVENTORIES().then((data) => console.log(data))
+  }, [])
+
+  // Get Recipes
+  useEffect(() => {
+    GET_RECIPES().then((data) => setRecipes(data))
+  }, [])
+
+  // Get Recipes
+  useEffect(() => {
+    recipes?.map((el) =>
+      GET_RECIPE_BY_ID(el.ID).then((data) => setRecipeDetails(data))
+    )
   }, [])
 
   const [startDate, setStartDate] = useState(new Date())
@@ -61,20 +96,7 @@ function ProductionOrder() {
     },
   ]
 
-  const recipeOptions = [
-    {
-      label: "Recipe 1",
-      value: "Recipe 1",
-    },
-    {
-      label: "Recipe 2",
-      value: "Recipe 2",
-    },
-    {
-      label: "Recipe 3",
-      value: "Recipe 3",
-    },
-  ]
+  const recipeOptions = recipes?.map((el) => ({ label: el.Name, value: el.ID }))
 
   const itemOptions = [
     {
@@ -119,11 +141,11 @@ function ProductionOrder() {
   ]
 
   const columns = [
-    {
-      field: "item",
-      caption: t("Item"),
-      options: itemOptions,
-    },
+    // {
+    //   field: "item",
+    //   caption: t("Item"),
+    //   options: itemOptions,
+    // },
     {
       field: "recipe",
       caption: t("Recipe"),
@@ -140,15 +162,19 @@ function ProductionOrder() {
       caption: t("Total"),
       dataType: "number",
       allowEditing: false,
+      calculateCellValueHandle: (rowData) => rowData.quantity * rowData.cost,
     },
   ]
 
-  const tableData = [
-    {
-      code: 1110000001,
-      //   amount: 100,
-    },
-  ]
+  function handleTableData(e) {
+    const tableData = e.changes[0].data
+    delete tableData.__KEY__
+
+    const cost = recipeDetails?.filter((el) => tableData.recipe === el.ID_TRKEBA)[0].Cost
+    
+
+    console.log(tableData)
+  }
 
   useEffect(() => {
     console.log(values)
@@ -177,9 +203,11 @@ function ProductionOrder() {
         ColoredRows
         searchPanel={false}
         columnChooser={false}
-        // dataSource={tableData}
+        onSaving={(e) => handleTableData(e)}
+        // dataSource={tableValues}
         colAttributes={columns}
         options={options}
+        // onCellClick={(e) => console.log(e.value)}
       />
 
       <ButtonComponent

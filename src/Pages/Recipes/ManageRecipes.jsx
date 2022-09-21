@@ -1,34 +1,55 @@
 import React, { useEffect, useState } from "react"
-import { GET_PRODUCTS } from "../../Services/Api/Api"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
-import { useNavigate } from "react-router-dom"
-import { Column, Button } from "devextreme-react/data-grid"
-import { Popup } from "devextreme-react/popup"
-import ScrollView from "devextreme-react/scroll-view"
-import { useTranslation } from "react-i18next"
-// import AddInventory from "./AddInventory"
-import UpdateInventories from "../Inventory/UpdateInventories"
+import { GET_PRODUCT_BY_ID } from "../Products/Api"
+import { DELETE_RECIPE, GET_RECIPES, GET_RECIPE_BY_ID } from "./Api"
 
 function ManageRecipes() {
-  const navigate = useNavigate()
-  const { t } = useTranslation()
+  const [data, setData] = useState()
+  const [details, setDetails] = useState([])
 
-  const [data, setData] = useState([
-    {
-      id: "1",
-      recipe_name: "recipe 1",
-      item: "Item 1",
-      quantity: 10,
-      cost: 2000,
-    },
-  ])
+  const [itemToDelete, setItemToDelete] = useState()
 
-  const [editOpen, setEditOpen] = useState(false)
-
+  // GET Recipes
   useEffect(() => {
-    // GET_PRODUCTS().then((data) => setData(data))
+    async function getRecipeDetails() {
+      data?.map((el) =>
+        GET_RECIPE_BY_ID(el.ID).then((data) =>
+          setDetails((prev) => [...prev, data[0]])
+        )
+      )
+    }
+
+    GET_RECIPES()
+      .then((data) => setData(data))
+      .then(() => getRecipeDetails())
   }, [])
+
+  // GET Recipe details
+  // useEffect(() => {
+  //   async function getRecipeDetails() {
+  //     data &&
+  //       data.map((el) =>
+  //         GET_RECIPE_BY_ID(el.ID).then((data) =>
+  //           setDetails((prev) => [...prev, data[0]])
+  //         )
+  //       )
+  //   }
+
+  //   getRecipeDetails()
+  // }, [])
+
+  // GET Item by ID
+  // useEffect(() => {
+  //   GET_PRODUCT_BY_ID(details && details[0].ID_TRKEBA).then((data) =>
+  //     console.log(data, "item")
+  //   )
+  // }, [data])
+
+  function handleDelete(e) {
+    const id = e.data.ID_TRKEBA
+    DELETE_RECIPE(id)
+  }
 
   const itemOptions = [
     {
@@ -47,14 +68,18 @@ function ManageRecipes() {
 
   const columns = [
     {
-      field: "id",
+      field: "ID",
       caption: "ID",
       visible: false,
       allowEditing: false,
     },
     {
-      field: "recipe_name",
+      field: "Name",
       caption: "Recipe Name",
+    },
+    {
+      field: "Num",
+      caption: "Number",
     },
     {
       field: "item",
@@ -62,12 +87,12 @@ function ManageRecipes() {
       options: itemOptions,
     },
     {
-      field: "quantity",
+      field: "QTY",
       caption: "Quantity",
       dataType: "number",
     },
     {
-      field: "cost",
+      field: "Cost",
       caption: "Cost",
       dataType: "number",
     },
@@ -76,9 +101,14 @@ function ManageRecipes() {
       caption: "Total",
       dataType: "number",
       allowEditing: false,
-      calculateCellValueHandle: (rowData) => rowData.quantity * rowData.cost,
+      calculateCellValueHandle: (rowData) => rowData.QTY * rowData.Cost,
     },
   ]
+
+  useEffect(() => {
+    console.log(data, "data")
+    console.log(details, "details")
+  }, [data, details])
 
   return (
     <>
@@ -89,34 +119,13 @@ function ManageRecipes() {
           ColoredRows
           editingMode="popup"
           popupTitle="Update Recipes"
+          onRowRemoving={(e) => handleDelete(e)}
           searchPanel={false}
           columnChooser={false}
-          dataSource={data}
+          dataSource={details}
           colAttributes={columns}
-        >
-          {/* <Column type="buttons" width={120}>
-            <Button
-              hint={t("Update")}
-              icon={"edit"}
-              visible={true}
-              disabled={false}
-              onClick={() => setEditOpen(true)}
-              name={"Update"}
-            />
-
-            <Button name={"delete"} />
-          </Column> */}
-        </MasterTable>
+        />
       </FormComponent>
-
-      {/* <Popup
-        title={t("Update")}
-        height={"80vh"}
-        visible={editOpen}
-        hideOnOutsideClick={true}
-        onHiding={() => setEditOpen(false)}
-        contentComponent={() => <UpdateInventories />}
-      ></Popup> */}
     </>
   )
 }

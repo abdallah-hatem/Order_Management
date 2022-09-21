@@ -8,6 +8,10 @@ import ProductDetails from "../Pages/Products/ProductDetails";
 import AddRecipe from "../Pages/Recipes/AddRecipe";
 import ManageRecipes from "../Pages/Recipes/ManageRecipes";
 import Order from "../Pages/Order/Order";
+import AddCategory from "../Pages/Categories/AddCategory";
+import ManageCategories from "../Pages/Categories/ManageCategories";
+import AddUnit from "../Pages/Units/AddUnit";
+import ManageUnits from "../Pages/Units/ManageUnits";
 
 export const routes = [
   {
@@ -43,6 +47,36 @@ export const routes = [
         path: "/inventory-receive",
         component: <InventoryReceive />,
       },
+    ]
+  },
+  {
+    title: "Categories",
+    data: [
+      {
+        title: "Add Category",
+        path: "/add-category",
+        component: <AddCategory />,
+      },
+      {
+        title: "Manage Category",
+        path: "/manage-category",
+        component: <ManageCategories />,
+      }
+    ]
+  },
+  {
+    title: "Units",
+    data: [
+      {
+        title: "Add Unit",
+        path: "/add-unit",
+        component: <AddUnit />,
+      },
+      {
+        title: "Manage Unit",
+        path: "/manage-unit",
+        component: <ManageUnits />,
+      }
     ]
   },
   {

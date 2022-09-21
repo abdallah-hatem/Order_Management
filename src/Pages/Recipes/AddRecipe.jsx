@@ -5,7 +5,8 @@ import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import SearchBar from "../../Web Components/SearchBar/SearchBar"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
-import { GET_PRODUCTS } from "../../Services/Api/Api"
+import { ADD_RECIPE } from "./Api"
+import { GET_PRODUCTS } from "../Products/Api"
 
 function AddRecipe() {
   const { t } = useTranslation()
@@ -13,24 +14,29 @@ function AddRecipe() {
   const defaultValues = useRef({
     number: "",
     name: "",
+    iteminfo: [],
   })
 
   const [values, setValues] = useState(defaultValues.current)
+  const [tableValues, seTableValues] = useState([])
+  const [products, setProducts] = useState()
 
   const handleChange = useCallback((e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }, [])
 
   function handleSubmit() {
-    for (const [key, value] of Object.entries(values)) {
-      if (!value) {
-        alert(t("Fill the inputs"))
-      }
-    }
+    // for (const [key, value] of Object.entries(values)) {
+    //   if (!value) {
+    //     alert(t("Fill the inputs"))
+    //   }
+    // }
+
+    ADD_RECIPE(values)
   }
 
   useEffect(() => {
-    // GET_PRODUCTS().then((data) => console.log(data))
+    GET_PRODUCTS().then((data) => setProducts(data))
   }, [])
 
   const data = [
@@ -38,33 +44,24 @@ function AddRecipe() {
       label: "Number :",
       placeholder: "Number",
       name: "number",
-      handleChange,
       value: values["number"],
+      type: "number",
+      handleChange,
     },
 
     {
       label: "Name :",
       placeholder: "Name",
       name: "name",
-      handleChange,
       value: values["name"],
+      handleChange,
     },
   ]
 
-  const itemOptions = [
-    {
-      label: "Item 1",
-      value: "Item 1",
-    },
-    {
-      label: "Item 2",
-      value: "Item 2",
-    },
-    {
-      label: "Item 3",
-      value: "Item 3",
-    },
-  ]
+  const itemOptions = products?.map((el) => ({
+    label: el.item_name,
+    value: el.id,
+  }))
 
   const columns = [
     {
@@ -81,25 +78,42 @@ function AddRecipe() {
       field: "cost",
       caption: t("Cost"),
       dataType: "number",
-      allowEditing: false,
     },
     {
       field: "total",
       caption: t("Total"),
       dataType: "number",
       allowEditing: false,
+      calculateCellValueHandle: (rowData) => rowData.quantity * rowData.cost,
     },
   ]
 
-  const tableData = [
-    {
-      //   code: 1110000001,
-      //   amount: 100,
-    },
-  ]
+  function handleTableData(e) {
+    const tableData = e.changes[0].data
+    delete tableData.__KEY__
+
+    seTableValues((prev) => [...prev, tableData])
+
+    // const newTable = tableValues.map((el) => ({
+    //   item_id: el.item,
+    //   QTY: el.quantity,
+    //   COST: el.cost,
+    // }))
+    // setValues((prev) => ({ ...prev, iteminfo: newTable }))
+  }
+
+  useEffect(() => {
+    const newTable = tableValues.map((el) => ({
+      item_id: el.item,
+      QTY: el.quantity,
+      COST: el.cost,
+    }))
+    setValues((prev) => ({ ...prev, iteminfo: newTable }))
+  }, [tableValues])
 
   useEffect(() => {
     console.log(values)
+    console.log(tableValues, "tableValues")
   }, [values])
 
   return (
@@ -107,7 +121,6 @@ function AddRecipe() {
       <SearchBar
         listView
         showButton={false}
-        handleSubmit={handleSubmit}
         handleChange={handleChange}
         data={data}
         values={values}
@@ -122,9 +135,10 @@ function AddRecipe() {
         allowUpdate
         ColoredRows
         editingMode="popup"
+        onSaving={(e) => handleTableData(e)}
+        dataSource={tableValues}
         searchPanel={false}
         columnChooser={false}
-        // dataSource={tableData}
         colAttributes={columns}
       />
 

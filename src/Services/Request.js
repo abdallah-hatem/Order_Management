@@ -6,7 +6,7 @@ import { ApiBaseUrl } from "./Config";
  */
 
 export const client = axios.create({
-  baseURL: ApiBaseUrl + "/api/",
+  baseURL: ApiBaseUrl,
 });
 
 /**
@@ -35,9 +35,13 @@ const REQUEST = function (options) {
 
   return client({
     ...options,
+    // headers: {
+    //   ...axios.defaults.headers,
+    // },
     headers: {
-      ...axios.defaults.headers,
-    },
+      "Token": "RdcE6V6OrUB8Nyk8#$L",
+      // 'Content-type': 'application/json'
+    }
   })
     .then(onSuccess)
     .catch(onError);

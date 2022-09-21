@@ -7,7 +7,7 @@ import { GetFromLocalStorage } from "./localStorageService";
  */
 
 export const client = axios.create({
-  baseURL: ApiBaseUrl + "api/",
+  baseURL: ApiBaseUrl,
 });
 
 /**

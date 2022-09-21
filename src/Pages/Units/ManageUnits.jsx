@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
-import { useNavigate } from "react-router-dom"
-import { useTranslation } from "react-i18next"
-import { GET_INVENTORIES } from "./Api"
+import { DELETE_UNIT, GET_UNITS } from "./Api"
 
-function ManageInventories() {
+function ManageUnits() {
   const [data, setData] = useState()
 
   useEffect(() => {
-    GET_INVENTORIES().then((data) => setData(data))
+    GET_UNITS().then((data) => setData(data))
   }, [])
 
   const columns = [
@@ -20,27 +18,29 @@ function ManageInventories() {
       allowEditing: false,
     },
     {
-      field: "name",
+      field: "Name",
       caption: "Name",
-    },
-    {
-      field: "type",
-      caption: "Type",
     },
   ]
 
+  function handleDelete(e) {
+    const id = e.data.id
+    DELETE_UNIT(id)
+  }
+
   useEffect(() => {
-    data && console.log(data, "data")
+    data && console.log(data)
   }, [data])
 
   return (
-    <FormComponent title="Manage Inventories">
+    <FormComponent title="Manage Units">
       <MasterTable
         allowDelete
         allowUpdate
         ColoredRows
         editingMode="popup"
-        popupTitle="Update Inventory"
+        popupTitle="Update Units"
+        onRowRemoving={(e) => handleDelete(e)}
         searchPanel={false}
         columnChooser={false}
         dataSource={data}
@@ -50,4 +50,4 @@ function ManageInventories() {
   )
 }
 
-export default ManageInventories
+export default ManageUnits
