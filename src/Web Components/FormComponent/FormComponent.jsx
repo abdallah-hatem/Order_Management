@@ -3,6 +3,7 @@ import "./FormComponent.css"
 
 import { Card, CardHeader, CardBody } from "shards-react"
 import { useTranslation } from "react-i18next"
+import LoadingAnimation from "../LoadingAnimation/LoadingAnimation"
 // import Button from "react-bootstrap/Button"
 // import Card from "react-bootstrap/Card"
 
@@ -17,6 +18,7 @@ function FormComponent({
   hideHeader = false,
   content,
   hideCard = false,
+  loading = false,
 }) {
   const { t, i18n } = useTranslation()
   return !hideCard ? (
@@ -42,9 +44,13 @@ function FormComponent({
           )}
         </CardHeader>
         <CardBody>
-          <div style={{ direction: i18n.language === "en" ? "ltr" : "rtl" }}>
-            {children}
-          </div>
+          {!loading ? (
+            <div style={{ direction: i18n.language === "en" ? "ltr" : "rtl" }}>
+              {children}
+            </div>
+          ) : (
+            <LoadingAnimation />
+          )}
         </CardBody>
       </Card>
     </div>

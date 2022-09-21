@@ -38,13 +38,15 @@ const Order = () => {
   const [loading, setloading] = useState(false)
   const onHiding = () => setloading(false)
 
-  ////////////////////////////////////////// 
+  //////////////////////////////////////////
 
   const [orders, setOrders] = useState()
   console.log(orders, "orders")
 
   useEffect(() => {
-    GET_PRODUCTION_ORDERS().then((data) => setOrders(data))
+    GET_PRODUCTION_ORDERS()
+      .then((data) => setOrders(data))
+      .then(() => setloading(true))
   }, [])
 
   const cardData =
@@ -56,7 +58,7 @@ const Order = () => {
 
   return (
     <div className="orders-cont">
-      <FormComponent title={"Orders"} loading={loading} onHiding={onHiding}>
+      <FormComponent title={"Orders"} loading={!loading} onHiding={onHiding}>
         <EditPopUp
           visible={editPopUp}
           onHiding={useCallback(() => {
@@ -66,31 +68,6 @@ const Order = () => {
           data={selectedCard}
           // ChangeData={ChangeData}
         />
-        {/* <Button
-          className="btn btn btn-success col-12"
-          // disabled={!isValueChanged}
-          type="button"
-          // disabled={loadIndicatorVisible}
-          onClick={() => setstatus(!status)}
-        >
-          <span className="dx-button-text">
-            {
-              //loadIndicatorVisible ? t("Loading") : t("Save")
-              status ? t("Is not Active") : t("Is Active")
-            }
-          </span>
-        </Button> */}
-
-        {/* <div class="form-group">
-          <label for="pwd">{t("Search")}</label>
-          <input
-            type="text"
-            class="form-control"
-            onChange={(e) => setSearch(e.target.value)}
-            id="pwd"
-            style={{ height: "45px", fontSize: "20px" }}
-          />
-        </div> */}
 
         {cardData?.map((data, index) => {
           return (

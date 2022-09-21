@@ -7,9 +7,13 @@ function ManageUnits() {
   const [data, setData] = useState()
   const [updatedData, setUpdatedData] = useState("")
 
+  const [loading, setLoading] = useState(true)
+
   // Get Units
   useEffect(() => {
-    GET_UNITS().then((data) => setData(data))
+    GET_UNITS()
+      .then((data) => setData(data))
+      .then(() => setLoading(false))
   }, [])
 
   function handleDelete(e) {
@@ -48,7 +52,7 @@ function ManageUnits() {
   }, [data])
 
   return (
-    <FormComponent title="Manage Units">
+    <FormComponent loading={loading} title="Manage Units">
       <MasterTable
         allowDelete
         allowUpdate

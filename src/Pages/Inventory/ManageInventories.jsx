@@ -7,9 +7,13 @@ import { GET_INVENTORIES } from "./Api"
 
 function ManageInventories() {
   const [data, setData] = useState()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    GET_INVENTORIES().then((data) => setData(data))
+    GET_INVENTORIES()
+      .then((data) => setData(data))
+      .then(() => setLoading(false))
+
   }, [])
 
   const columns = [
@@ -34,7 +38,7 @@ function ManageInventories() {
   }, [data])
 
   return (
-    <FormComponent title="Manage Inventories">
+    <FormComponent loading={loading} title="Manage Inventories">
       <MasterTable
         allowDelete
         allowUpdate

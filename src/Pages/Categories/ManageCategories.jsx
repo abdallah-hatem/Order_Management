@@ -6,9 +6,12 @@ import { GET_CATEGORY } from "./Api"
 
 function ManageCategories() {
   const [data, setData] = useState()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    GET_CATEGORY().then((data) => setData(data))
+    GET_CATEGORY()
+      .then((data) => setData(data))
+      .then(() => setLoading(false))
   }, [])
 
   const columns = [
@@ -30,7 +33,7 @@ function ManageCategories() {
 
   return (
     <>
-      <FormComponent title="Manage Categories">
+      <FormComponent loading={loading} title="Manage Categories">
         <MasterTable
           allowDelete
           allowUpdate
