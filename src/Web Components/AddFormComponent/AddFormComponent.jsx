@@ -40,6 +40,7 @@ function AddFormComponent({
               labelWidth={el.labelWidth || labelWidth}
               children={el.children}
               width={width}
+              defaultValue={el.defaultValue}
             >
               {el.component}
             </InputComponent>
@@ -87,6 +88,7 @@ function AddFormComponent({
               removeContainer={el.removeContainer}
               width={width}
               type={el.type}
+              defaultValue={el.defaultValue}
             >
               {el.component}
             </InputComponent>

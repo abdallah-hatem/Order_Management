@@ -17,7 +17,8 @@ import RequestCard from "./Components/RequestCard"
 import EditPopUp from "./Components/EditPopUp"
 import PageLayout from "./Components/components/PageLayout/PageLayout"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
-import { GET_PRODUCTION_ORDERS } from "./Api2"
+import { DELETE_PRODUCTION_ORDER, GET_PRODUCTION_ORDERS } from "./Api2"
+import { useNavigate } from "react-router-dom"
 // import LoadingPanel from "./components/components/LoadingPanel"
 const Order = () => {
   const { t, i18n } = useTranslation()
@@ -52,9 +53,16 @@ const Order = () => {
   const cardData =
     orders &&
     orders.map((el) => ({
+      id: el.id,
       Date: el.date_order,
       items: [{ name: "item1" }],
     }))
+
+  let navigate = useNavigate()
+
+  function handleDelete(e) {
+    DELETE_PRODUCTION_ORDER({ id: e.id })
+  }
 
   return (
     <div className="orders-cont">
@@ -72,7 +80,7 @@ const Order = () => {
         {cardData?.map((data, index) => {
           return (
             <RequestCard
-              // Delete={Delete}
+              Delete={() => handleDelete(data)}
               // CheckRequest={CheckRequest}
               data={data}
               index={index}

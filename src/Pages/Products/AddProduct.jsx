@@ -347,10 +347,11 @@ function AddProduct() {
     },
     {
       label: "Added Colors :",
-      placeholder: "Added Colors",
+      placeholder: "No Added Colors",
       name: "added_colors",
       value: addedColors,
       textArea: true,
+      disabled: true,
       handleChange: handleColorChange,
     },
   ]

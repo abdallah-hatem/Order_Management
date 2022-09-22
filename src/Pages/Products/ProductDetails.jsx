@@ -335,6 +335,8 @@ function ProductDetails() {
   const [item_colors, setItem_colors] = useState([])
   const [addedColors, setAddedColors] = useState([])
 
+  const [loading, setLoading] = useState(true)
+
   function handleColorSubmit() {
     colorValues.color_id = Math.floor(Date.now() * Math.random())
     setItem_colors((prev) => [...prev, colorValues])
@@ -380,9 +382,9 @@ function ProductDetails() {
       [e.target.name]: !sizeVals[`${el.name}`],
     }))
   }
-  useEffect(() => {
-    setValues((prev) => ({ ...prev, item_Sizes: [sizeVals] }))
-  }, [sizeVals])
+  // useEffect(() => {
+  //   setValues((prev) => ({ ...prev, item_Sizes: [sizeVals] }))
+  // }, [sizeVals])
 
   /////////////////////////////////
 
@@ -391,20 +393,23 @@ function ProductDetails() {
   const { id } = useParams()
 
   useEffect(() => {
-    GET_PRODUCT_BY_ID(id)
-      .then((data) => setValues(data[0]))
-      .then(() =>
-        setSizeVals({
-          s: values.s,
-          m: values.m,
-          l: values.l,
-          xl: values.xl,
-          xxl: values.xxl,
-        })
-      )
-    GET_PRODUCTS_COLORS(id).then((data) => console.log(data, "COLORS"))
+    GET_PRODUCT_BY_ID(id).then((data) => setValues(data[0]))
+
+    GET_PRODUCTS_COLORS(id)
+      .then((data) => console.log(data, "COLORS"))
+      .then(() => setLoading(false))
     // GET_PRODUCT_BY_ID(id).then((data) => console.log(data))
   }, [])
+
+  useEffect(() => {
+    setSizeVals({
+      s: values.s,
+      m: values.m,
+      l: values.l,
+      xl: values.xl,
+      xxl: values.xxl,
+    })
+  }, [loading])
 
   /////////////////////////////////
 
@@ -412,8 +417,38 @@ function ProductDetails() {
   const [popUp, setPopUp] = useState(false)
 
   function handleSubmit(e) {
-    console.log(values, values)
-    // UPDATE_PRODUCT(values)
+    const finalData = {
+      id: values.id,
+      item_name: values.item_name,
+      SN: values.SN,
+      model: values.model,
+      unit_id: values.unit_id,
+      cat_id: values.cat_id,
+      price: values.price,
+      type: values.itemtypes,
+      VAT: values.VAT,
+      Barcode: values.Barcode,
+      Details: values.Details,
+      item_Sizes: [
+        {
+          s: values.s,
+          m: values.m,
+          l: values.l,
+          xl: values.xl,
+          xxl: values.xxl,
+        },
+      ],
+      // item_colors: [
+      //   {
+      //     color_id: 1010,
+      //     color_name: "RED",
+      //   },
+      // ],
+    }
+
+    // console.log(finalData,"finalData")
+
+    UPDATE_PRODUCT(finalData)
   }
 
   const [units, setUnits] = useState()
@@ -432,6 +467,9 @@ function ProductDetails() {
   const categoryOptions = categories?.map((el) => ({ label: el.Name, value: el.id }))
 
   const unitOptions = units?.map((el) => ({ label: el.Name, value: el.id }))
+
+  const defValUnit = unitOptions?.filter((el) => el.value === values.unit_id)[0]
+    .label
 
   const typeOptions = [
     {
@@ -547,7 +585,7 @@ function ProductDetails() {
       label: "Unit :",
       placeholder: "Unit",
       name: "unit_id",
-      // placeholder: unitOptions[values["unit_id"]],
+      defaultValue: defValUnit,
       chooseOptions: true,
       options: unitOptions,
       handleChange,
@@ -643,7 +681,7 @@ function ProductDetails() {
 
   return (
     <>
-      <FormComponent title={"Update Product"}>
+      <FormComponent loading={loading} title={"Update Product"}>
         <AddFormComponent
           hideCard
           buttonTitle="Update"

@@ -40,6 +40,7 @@ const RequestCard = ({ index, data, Delete, CheckRequest, OnEdit }) => {
             <div style={{ display: "flex" }}>
               <ButtonComponent title={"Accept"} />
               <ButtonComponent title={"Reject"} />
+              <ButtonComponent onClick={Delete} title={"Delete"} />
             </div>
           </div>
         </div>

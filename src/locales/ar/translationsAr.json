@@ -954,6 +954,25 @@
 
   " :": " :",
   "": "",
+  
+  "Accept": "قبول",
+  "Reject": "رفض",
+  "Color": "اللون",
+  "Color Name :": "إسم اللون :",
+  "Color Name": "إسم اللون",
+  "Added Colors": "الألوان المضافة",
+  "Added Colors :": "الألوان المضافة :",
+
+  "Category Name :": "إسم الفئة :",
+  "Name :": "الأسم :",
+  "Recipe Name": "إسم التركيبة",
+  "Manage Recipes": "إدارة التركيبات",
+  "Add Recipes": "أضف تركيبة",
+  "Manage Units": "إدارة الوحدات",
+  "Manage Categories": "إدارة الفئات",
+  "Manage Products": "إدارة المنتجات",
+  "Manage Inventories": "إدارة المخزون",
+  "Units": "الوحدات",
 
   "TAX Report": "تقرير الضرائب",
   "Manage Income Tax": "إدارة ضريبة الدخل",
@@ -971,12 +990,12 @@
   "TAX Name 2": "اسم الضريبة 2",
   "TAX Name 1 :": "اسم الضريبة 1 :",
   "TAX Name 1": "اسم الضريبة 1",
-  
+
   "Production Order": "أمر الإنتاج",
-  
+
   "Item": "الصنف",
   "Recipe": "التركيبة",
-  
+
   "Number :": "الرقم :",
   "Store :": "المخزن :",
   "Note :": "الملاحظات :",

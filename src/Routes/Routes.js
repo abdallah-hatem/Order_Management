@@ -12,6 +12,7 @@ import AddCategory from "../Pages/Categories/AddCategory";
 import ManageCategories from "../Pages/Categories/ManageCategories";
 import AddUnit from "../Pages/Units/AddUnit";
 import ManageUnits from "../Pages/Units/ManageUnits";
+import Login from "../Pages/Login/Login";
 
 export const routes = [
   {
@@ -38,7 +39,7 @@ export const routes = [
         component: <AddInventory />,
       },
       {
-        title: "Manage Inventory",
+        title: "Manage Inventories",
         path: "/manage-inventories",
         component: <ManageInventories />,
       },
@@ -58,8 +59,8 @@ export const routes = [
         component: <AddCategory />,
       },
       {
-        title: "Manage Category",
-        path: "/manage-category",
+        title: "Manage Categories",
+        path: "/manage-categories",
         component: <ManageCategories />,
       }
     ]
@@ -73,8 +74,8 @@ export const routes = [
         component: <AddUnit />,
       },
       {
-        title: "Manage Unit",
-        path: "/manage-unit",
+        title: "Manage Units",
+        path: "/manage-units",
         component: <ManageUnits />,
       }
     ]
@@ -116,5 +117,9 @@ export const singleRoutes = [
   {
     path: "/product-details/:id",
     component: <ProductDetails />,
+  },
+  {
+    path: "/login",
+    component: <Login />,
   }
 ]
