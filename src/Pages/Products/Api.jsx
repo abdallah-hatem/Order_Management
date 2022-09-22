@@ -30,7 +30,7 @@ export const ADD_PRODUCT = async (data) => {
   }).catch((error) => console.log(error))
 }
 
-export const UPDATE_PRODUCT = async (id, data) => {
+export const UPDATE_PRODUCT = async (data) => {
   return await REQUEST({
     method: "POST",
     url: ApiBaseUrl + `PRODUCTS/1/""`,

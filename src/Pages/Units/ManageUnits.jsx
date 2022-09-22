@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
-import { DELETE_UNIT, GET_UNITS } from "./Api"
+import { DELETE_UNIT, GET_UNITS, UPDATE_UNIT } from "./Api"
 
 function ManageUnits() {
   const [data, setData] = useState()
@@ -18,19 +18,23 @@ function ManageUnits() {
 
   function handleDelete(e) {
     const id = e.data.id
-    DELETE_UNIT(id)
+    DELETE_UNIT({
+      id: id,
+    })
   }
 
   ///// Handle Update//////
   function handleUpdate(e) {
     const updatedData = e.changes[0].key
-    setUpdatedData(updatedData)
     console.log(updatedData)
+    setUpdatedData(updatedData)
   }
 
   useEffect(() => {
     delete updatedData.stock_typ
     setUpdatedData(updatedData)
+
+    UPDATE_UNIT(updatedData)
   }, [updatedData])
   //////////////////
 

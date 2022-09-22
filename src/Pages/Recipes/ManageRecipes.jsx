@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
+import { React, useCallback, useEffect, useState } from "react"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
 import { GET_PRODUCTS, GET_PRODUCT_BY_ID } from "../Products/Api"
-import { DELETE_RECIPE, GET_RECIPES, GET_RECIPE_BY_ID } from "./Api"
+import { DELETE_RECIPE, GET_RECIPES, GET_RECIPE_BY_ID, UPDATE_RECIPE } from "./Api"
 
 function ManageRecipes() {
   const [data, setData] = useState()
@@ -20,28 +20,70 @@ function ManageRecipes() {
       .then(() => setLoading(false))
   }, [])
 
-  // Get Details
   useEffect(() => {
-    async function getDetails() {
-      data?.map((el) =>
-        GET_RECIPE_BY_ID(el.ID).then((data) =>
-          setDetails((prev) => [...prev, data[0]])
-        )
+    // Get Details
+    data?.map((el) =>
+      GET_RECIPE_BY_ID(el.ID).then((data) =>
+        setDetails((prev) => [...prev, data[0]])
       )
-    }
+    )
 
-    getDetails()
+    // Get Items
+    GET_PRODUCTS().then((data) => setItems(data))
   }, [loading])
 
-  // Get Items
-  useEffect(() => {
-    GET_PRODUCTS().then((data) => setItems(data))
-  }, [data])
+  // function handleDelete(e) {
+  //   const id = e.data.ID_TRKEBA
+  //   console.log(id)
+  //   // DELETE_RECIPE({ ID: id })
+  // }
 
-  function handleDelete(e) {
+  const handleDelete = useCallback((e) => {
     const id = e.data.ID_TRKEBA
-    DELETE_RECIPE(id)
-  }
+    // console.log(id)
+    DELETE_RECIPE({ ID: id })
+  }, [])
+
+  const handleUpdate = useCallback((e) => {
+    const updatedData = e.changes[0].data
+    const key = e.changes[0].key
+
+    const finalData = updatedData &&
+      key && {
+        ID: key.ID_TRKEBA,
+        number: updatedData.Num,
+        Name: updatedData.Name,
+        iteminfo: [
+          {
+            item_id: updatedData.item,
+            QTY: updatedData.QTY,
+            COST: updatedData.Cost,
+          },
+        ],
+      }
+    // console.log(finalData)
+    UPDATE_RECIPE(finalData)
+  }, [])
+
+  // function handleUpdate(e) {
+  //   const updatedData = e.changes[0].data
+  //   const key = e.changes[0].key
+
+  //   const finalData = {
+  //     ID: key.ID_TRKEBA,
+  //     number: updatedData.Num,
+  //     Name: updatedData.Name,
+  //     iteminfo: [
+  //       {
+  //         item_id: updatedData.item,
+  //         QTY: updatedData.QTY,
+  //         COST: updatedData.Cost,
+  //       },
+  //     ],
+  //   }
+  //   // console.log(finalData)
+  //   UPDATE_RECIPE(finalData)
+  // }
 
   const itemOptions = items?.map((el) => ({
     label: el.item_name,
@@ -103,6 +145,7 @@ function ManageRecipes() {
           editingMode="popup"
           popupTitle="Update Recipes"
           onRowRemoving={(e) => handleDelete(e)}
+          onSaving={(e) => handleUpdate(e)}
           searchPanel={false}
           columnChooser={false}
           dataSource={details}

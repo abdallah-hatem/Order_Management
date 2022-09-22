@@ -304,7 +304,7 @@ import {
 import SearchBar from "../../Web Components/SearchBar/SearchBar"
 import { Popup } from "devextreme-react/popup"
 import { GET_UNITS } from "../Units/Api"
-import { GET_CATEGORY } from "../Categories/Api"
+import { GET_CATEGORIES } from "../Categories/Api"
 import { useParams } from "react-router-dom"
 
 function ProductDetails() {
@@ -412,6 +412,7 @@ function ProductDetails() {
   const [popUp, setPopUp] = useState(false)
 
   function handleSubmit(e) {
+    console.log(values, values)
     // UPDATE_PRODUCT(values)
   }
 
@@ -425,7 +426,7 @@ function ProductDetails() {
 
   // Get Categories
   useEffect(() => {
-    GET_CATEGORY().then((data) => setCategories(data))
+    GET_CATEGORIES().then((data) => setCategories(data))
   }, [])
 
   const categoryOptions = categories?.map((el) => ({ label: el.Name, value: el.id }))

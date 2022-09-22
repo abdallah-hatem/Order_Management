@@ -16,10 +16,18 @@ export const ADD_UNIT = async (data) => {
   }).catch((error) => console.log(error))
 }
 
-export const DELETE_UNIT = async (id) => {
+export const DELETE_UNIT = async (data) => {
   return await REQUEST({
     method: "POST",
     url: ApiBaseUrl + "class/2/unit",
-    data: id,
+    data,
+  }).catch((error) => console.log(error))
+}
+
+export const UPDATE_UNIT = async (data) => {
+  return await REQUEST({
+    method: "POST",
+    url: ApiBaseUrl + "class/1/unit",
+    data,
   }).catch((error) => console.log(error))
 }

@@ -16,18 +16,18 @@ export const ADD_INVENTORY = async (data) => {
   }).catch((error) => console.log(error))
 }
 
-export const DELETE_INVENTORY = async (id) => {
+export const DELETE_INVENTORY = async (data) => {
   return await REQUEST({
     method: "POST",
     url: ApiBaseUrl + "INVENORY/2",
-    data: id,
+    data,
   }).catch((error) => console.log(error))
 }
 
-export const UPDATE_INVENTORY = async (id) => {
+export const UPDATE_INVENTORY = async (data) => {
   return await REQUEST({
     method: "POST",
     url: ApiBaseUrl + "INVENORY/1",
-    data: id,
+    data,
   }).catch((error) => console.log(error))
 }

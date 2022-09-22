@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from "react"
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import SearchBar from "../../Web Components/SearchBar/SearchBar"
 import { ADD_INVENTORY } from "./Api"
@@ -12,6 +13,9 @@ function AddInventory() {
   })
 
   const [values, setValues] = useState(defaultValues.current)
+  useEffect(() => {
+    console.log(values)
+  }, [values])
 
   const handleChange = useCallback((e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -27,6 +31,21 @@ function AddInventory() {
     ADD_INVENTORY(values)
   }
 
+  const typeOptions = [
+    {
+      label: t("Raw Materials"),
+      value: 0,
+    },
+    {
+      label: t("Semi-raw Materials"),
+      value: 1,
+    },
+    {
+      label: t("Final Product"),
+      value: 2,
+    },
+  ]
+
   const inventoryData = [
     {
       label: "Inventory Name :",
@@ -39,7 +58,8 @@ function AddInventory() {
       label: "Inventory Type :",
       placeholder: "Inventory Type",
       name: "stock_typ",
-      value: values["stock_typ"],
+      chooseOptions: true,
+      options: typeOptions,
       handleChange,
     },
   ]

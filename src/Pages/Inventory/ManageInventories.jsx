@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
 import FormComponent from "../../Web Components/FormComponent/FormComponent"
 import MasterTable from "../../Web Components/MasterTable/MasterTable"
-import { useNavigate } from "react-router-dom"
-import { useTranslation } from "react-i18next"
-import { GET_INVENTORIES } from "./Api"
+
+import { DELETE_INVENTORY, GET_INVENTORIES, UPDATE_INVENTORY } from "./Api"
 
 function ManageInventories() {
   const [data, setData] = useState()
@@ -13,8 +12,31 @@ function ManageInventories() {
     GET_INVENTORIES()
       .then((data) => setData(data))
       .then(() => setLoading(false))
-
   }, [])
+
+  ///// Handle Update//////
+  const [updatedData, setUpdatedData] = useState("")
+
+  function handleUpdate(e) {
+    const updatedData = e.changes[0].key
+    console.log(updatedData)
+    setUpdatedData(updatedData)
+  }
+
+  useEffect(() => {
+    // delete updatedData.stock_typ
+    setUpdatedData(updatedData)
+
+    UPDATE_INVENTORY(updatedData)
+  }, [updatedData])
+  //////////////////
+
+  function handleDelete(e) {
+    const id = e.data.id
+    DELETE_INVENTORY({
+      id: id,
+    })
+  }
 
   const columns = [
     {
@@ -45,6 +67,8 @@ function ManageInventories() {
         ColoredRows
         editingMode="popup"
         popupTitle="Update Inventory"
+        onRowRemoving={(e) => handleDelete(e)}
+        onSaving={(e) => handleUpdate(e)}
         searchPanel={false}
         columnChooser={false}
         dataSource={data}

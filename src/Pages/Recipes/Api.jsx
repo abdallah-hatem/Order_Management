@@ -18,7 +18,7 @@ export const GET_RECIPE_BY_ID = async (id) => {
 export const ADD_RECIPE = async (data) => {
   return await REQUEST({
     method: "POST",
-    url: ApiBaseUrl + `TRKEBA/0/0`,
+    url: ApiBaseUrl + "TRKEBA/0/0",
     data,
   }).catch((error) => console.log(error))
 }
@@ -26,7 +26,15 @@ export const ADD_RECIPE = async (data) => {
 export const DELETE_RECIPE = async (id) => {
   return await REQUEST({
     method: "POST",
-    url: ApiBaseUrl + `TRKEBA/2/1`,
+    url: ApiBaseUrl + "TRKEBA/2/0",
     data: id,
+  }).catch((error) => console.log(error))
+}
+
+export const UPDATE_RECIPE = async (data) => {
+  return await REQUEST({
+    method: "POST",
+    url: ApiBaseUrl + "TRKEBA/1/0",
+    data,
   }).catch((error) => console.log(error))
 }
