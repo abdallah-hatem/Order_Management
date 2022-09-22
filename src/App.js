@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "./Layout/Layout";
 import { GetFromLocalStorage } from "./Services/localStorageService";
 import axios from "axios";
@@ -17,16 +17,29 @@ function App() {
 
   let navigate = useNavigate();
 
+
+
+  const location = useLocation()
+  const [currentRoute, setCurrentRoute] = useState("")
+  useEffect(() => {
+    setCurrentRoute(location.pathname)
+  }, [location])
+
+
   useEffect(() => {
     if (!GetFromLocalStorage("user")) {
       navigate("/login")
-    }
 
-    // console.log(GetFromLocalStorage("user"));
+    }
   }, []);
 
+  const [hidden, setHidden] = useState(true)
+  useEffect(() => {
+    currentRoute !== "/login" ? setHidden(false) : setHidden(true)
+  }, [currentRoute])
+
   return (
-    <Layout />
+    <Layout hidden={hidden} />
   );
 }
 

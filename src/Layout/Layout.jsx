@@ -6,7 +6,7 @@ import SideBar from "./SideBar"
 import NavBar from "./NavBar"
 import { routes, singleRoutes } from "../Routes/Routes"
 
-function Layout() {
+function Layout({ hidden }) {
   const [collapsed, setCollapsed] = useState(false)
   const [windowSize, setWindowSize] = useState(window.innerWidth)
 
@@ -41,14 +41,18 @@ function Layout() {
 
   return (
     <>
-      <NavBar handleCollapse={handleCollapse} />
+      <NavBar handleCollapse={handleCollapse} hidden={hidden} />
 
       <div className="bottom-cont">
-        <div className="side-bar" id="side-bar">
-          <SideBar />
+        <div style={{ zIndex: hidden && -5 }} className="side-bar" id="side-bar">
+          <SideBar hidden={hidden} />
         </div>
 
-        <div className="content-cont" id="content-container">
+        <div
+          style={{ width: hidden && "100%", left: hidden && 0 }}
+          className="content-cont"
+          id="content-container"
+        >
           <Routes>
             {routes.map((el) =>
               el.data ? (

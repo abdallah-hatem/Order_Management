@@ -14,8 +14,9 @@ import {
 
 import "react-pro-sidebar/dist/css/styles.css"
 import { routes } from "../Routes/Routes"
+import { GetFromLocalStorage } from "../Services/localStorageService"
 
-function SideBar({ clicked }) {
+function SideBar({ clicked, hidden }) {
   const { t } = useTranslation()
   const location = useLocation()
 
@@ -96,7 +97,7 @@ function SideBar({ clicked }) {
   }, [collapseMobile])
 
   return (
-    <ProSidebar width={"100%"} collapsed={clicked}>
+    <ProSidebar hidden={hidden} width={"100%"} collapsed={clicked}>
       <SidebarHeader>
         <div className="text-center p-3">
           <div>

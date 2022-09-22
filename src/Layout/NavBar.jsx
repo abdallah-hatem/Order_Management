@@ -3,9 +3,13 @@ import { useTranslation } from "react-i18next"
 import logo from "../assets/logo.png"
 
 import { Burger } from "@mantine/core"
+import ButtonComponent from "../Web Components/ButtonComponent/ButtonComponent"
+import { RemoveFromLocalStorage } from "../Services/localStorageService"
+import { Navigate, useNavigate } from "react-router-dom"
 
-function NavBar({ handleCollapse }) {
+function NavBar({ handleCollapse, hidden }) {
   const { t, i18n } = useTranslation()
+  let navigate = useNavigate()
 
   const [opened, setOpened] = useState(false)
   const title = opened ? "Close navigation" : "Open navigation"
@@ -17,6 +21,7 @@ function NavBar({ handleCollapse }) {
       <div className="nav-bar-left">
         <img src={logo} alt="logo" />
         <Burger
+          hidden={hidden}
           style={{
             border: "2px solid green",
             width: "auto",
@@ -72,7 +77,7 @@ function NavBar({ handleCollapse }) {
             </ul>
           </div>
 
-          <div class="dropdown">
+          {/* <div class="dropdown">
             <a
               class="text-reset me-3 dropdown-toggle hidden-arrow"
               href="#"
@@ -104,9 +109,9 @@ function NavBar({ handleCollapse }) {
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
 
-          <div class="dropdown">
+          {/* <div class="dropdown">
             <a
               class="dropdown-toggle d-flex align-items-center hidden-arrow"
               href="#"
@@ -144,7 +149,17 @@ function NavBar({ handleCollapse }) {
                 </span>
               </li>
             </ul>
-          </div>
+          </div> */}
+
+          {!hidden && (
+            <ButtonComponent
+              onClick={() => {
+                RemoveFromLocalStorage("user")
+                navigate("/login")
+              }}
+              title="Logout"
+            />
+          )}
         </div>
       </div>
     </div>

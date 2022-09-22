@@ -100,7 +100,7 @@ body {
 
 @media only screen and (max-width: 500px) {
   .nav {
-    height: 100px;
+    height: 140px;
     justify-content: center;
     .nav-bar-left {
       width: 100%;
@@ -117,11 +117,11 @@ body {
 
   .content-cont {
     height: calc(100vh - 100px);
-    margin-top: 25px;
+    margin-top: 65px;
   }
   .side-bar {
     height: calc(100vh - 100px);
-    margin-top: 25px;
+    margin-top: 65px;
     width: 100%;
   }
   .closed {
