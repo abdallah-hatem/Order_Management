@@ -8,6 +8,7 @@ import SearchBar from "../../Web Components/SearchBar/SearchBar"
 import { Popup } from "devextreme-react/popup"
 import { GET_UNITS } from "../Units/Api"
 import { GET_CATEGORIES } from "../Categories/Api"
+import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
 
 function AddProduct() {
   const defaultValues = useRef({
@@ -92,26 +93,6 @@ function AddProduct() {
     //   }
     // }
 
-    // ADD_PRODUCT({
-    //   item_no: 0,
-    //   item_name: "sanf kham API",
-    //   SN: "700035",
-    //   model: "AKRAM",
-    //   unit_id: 0,
-    //   cat_id: 0,
-    //   price: 10.0,
-    //   type: 0,
-    //   VAT: 14,
-    //   Barcode: "146464784",
-    //   Details: "some details",
-    //   item_Sizes: [{ s: "true", m: "true", l: "true", xl: "true", xxl: "true" }],
-    //   item_colors: [
-    //     { color_id: 120, color_name: "Red" },
-    //     { color_id: 122, color_name: "Blue" },
-    //     { color_id: 144, color_name: "White" },
-    //   ],
-    // })
-
     ADD_PRODUCT(values)
   }
 
@@ -120,13 +101,11 @@ function AddProduct() {
   const [units, setUnits] = useState()
   const [categories, setCategories] = useState()
 
-  // Get Units
   useEffect(() => {
+    // Get Units
     GET_UNITS().then((data) => setUnits(data))
-  }, [])
 
-  // Get Categories
-  useEffect(() => {
+    // Get Categories
     GET_CATEGORIES().then((data) => setCategories(data))
   }, [])
 
@@ -224,63 +203,6 @@ function AddProduct() {
         </div>
       ),
     },
-  ]
-
-  const DataCol2 = [
-    {
-      label: "SN :",
-      placeholder: "SN",
-      handleChange,
-      name: "SN",
-      value: values["SN"],
-    },
-    {
-      label: "Category :",
-      placeholder: "Category",
-      handleChange,
-      name: "category_id",
-      chooseOptions: true,
-      options: categoryOptions,
-    },
-    {
-      label: "Unit :",
-      placeholder: "Unit",
-      handleChange,
-      name: "unit_id",
-      chooseOptions: true,
-      options: unitOptions,
-    },
-    {
-      label: "Product Details :",
-      placeholder: "Product Details",
-      handleChange,
-      name: "Details",
-      value: values["Details"],
-      textArea: true,
-    },
-    {
-      label: "VAT :",
-      placeholder: "VAT",
-      handleChange,
-      name: "VAT",
-      type: "number",
-      value: values["VAT"],
-    },
-    {
-      label: "Type :",
-      placeholder: "Choose type",
-      name: "type",
-      chooseOptions: true,
-      options: typeOptions,
-      handleChange,
-    },
-    // {
-    //   label: "Color Name :",
-    //   placeholder: "Color Name",
-    //   handleChange,
-    //   name: "color_name",
-    //   value: values["color_name"],
-    // },
     {
       label: "Color :",
       removeContainer: true,
@@ -302,27 +224,55 @@ function AddProduct() {
     },
   ]
 
-  //////////// Tables ///////////////
-
-  // const columns = [
-  //   {
-  //     field: "supplier",
-  //     caption: "Supplier",
-  //     options,
-  //   },
-  //   {
-  //     field: "supplier_price",
-  //     caption: "Supplier Price",
-  //     dataType: "number",
-  //   },
-  // ]
-
-  // const data = [
-  //   {
-  //     supplier: "",
-  //     supplier_price: "",
-  //   },
-  // ]
+  const DataCol2 = [
+    {
+      label: "SN :",
+      placeholder: "SN",
+      name: "SN",
+      value: values["SN"],
+      handleChange,
+    },
+    {
+      label: "Category :",
+      placeholder: "Category",
+      name: "category_id",
+      chooseOptions: true,
+      options: categoryOptions,
+      handleChange,
+    },
+    {
+      label: "Unit :",
+      placeholder: "Unit",
+      name: "unit_id",
+      chooseOptions: true,
+      options: unitOptions,
+      handleChange,
+    },
+    {
+      label: "VAT :",
+      placeholder: "VAT",
+      name: "VAT",
+      type: "number",
+      value: values["VAT"],
+      handleChange,
+    },
+    {
+      label: "Type :",
+      placeholder: "Choose type",
+      name: "type",
+      chooseOptions: true,
+      options: typeOptions,
+      handleChange,
+    },
+    {
+      label: "Product Details :",
+      placeholder: "Product Details",
+      handleChange,
+      name: "Details",
+      value: values["Details"],
+      textArea: true,
+    },
+  ]
 
   const colorData = [
     {
@@ -391,12 +341,34 @@ function AddProduct() {
             hide
             CardTitle="Add Inventory"
             data={colorData}
-            buttonTitle="Add"
-            handleSubmit={handleColorSubmit}
+            showButton={false}
+            // buttonTitle="Add"
+            // handleSubmit={handleColorSubmit}
             colWidth="10"
             labelWidth="200px"
             width={"60%"}
-          />
+          >
+            {addedColors.length > 0 && (
+              <ButtonComponent
+                style={{ width: "150px", float: "right", backgroundColor: "red" }}
+                title="remove last color"
+                onClick={() => {
+                  setAddedColors((prev) => prev.slice(0, -1))
+                  setItem_colors((prev) => prev.slice(0, -1))
+                  console.log(values)
+                }}
+              />
+            )}
+            <ButtonComponent
+              style={{ width: "100px", float: "right" }}
+              title="Add color"
+              disable={
+                colorValues["color_name"].length == 0 ||
+                colorValues["color_name"].replace(/\s+/g, "").length == 0
+              }
+              onClick={handleColorSubmit}
+            />
+          </SearchBar>
         )}
       />
     </>
