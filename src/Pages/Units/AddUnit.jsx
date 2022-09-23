@@ -5,7 +5,7 @@ import { ADD_UNIT } from "./Api"
 
 function AddUnit() {
   const defaultValues = useRef({
-    unit_name: "",
+    Name: "",
   })
 
   const [values, setValues] = useState(defaultValues.current)
@@ -28,8 +28,8 @@ function AddUnit() {
     {
       label: "Unit Name :",
       placeholder: "Unit Name",
-      name: "unit_name",
-      value: values["unit_name"],
+      name: "Name",
+      value: values["Name"],
       handleChange,
     },
   ]

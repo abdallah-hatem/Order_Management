@@ -1,25 +1,26 @@
 .site-button-component {
-   color: white;
-   transition: background-color 0.3s ease-in-out;
-   font-size: 16px;
-   line-height: 2.2rem;
-   border: 1px solid #ffffff;
-   outline: unset;
-   width: 100%;
-   min-height: 40px;
-   cursor: pointer;
-   border-radius: 0.25rem;
-   background-color: #37a000;
+  color: white;
+  transition: background-color 0.3s ease-in-out;
+  font-size: 16px;
+  line-height: 2.2rem;
+  border: 1px solid #ffffff;
+  outline: unset;
+  width: 100%;
+  min-height: 40px;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  background-color: #37a000;
 }
 .site-button-component :disabled,
 button[disabled] {
-   background-color: #838383 !important;
-   opacity: 0.5;
+  background-color: #838383 !important;
+  opacity: 0.5;
 }
 .site-button-component:hover {
-   background-color: #838383 !important;
+  /* background-color: #838383 !important; */
+  opacity: 0.8;
 
-   box-shadow: none;
-   color: #fff;
-   outline: none;
+  box-shadow: none;
+  color: #fff;
+  outline: none;
 }

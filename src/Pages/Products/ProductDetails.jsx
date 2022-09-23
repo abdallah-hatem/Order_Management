@@ -468,8 +468,7 @@ function ProductDetails() {
 
   const unitOptions = units?.map((el) => ({ label: el.Name, value: el.id }))
 
-  const defValUnit = unitOptions?.filter((el) => el.value === values.unit_id)[0]
-    .label
+  const defValUnit = unitOptions?.filter((el) => el.value === values.unit_id)
 
   const typeOptions = [
     {
@@ -585,7 +584,7 @@ function ProductDetails() {
       label: "Unit :",
       placeholder: "Unit",
       name: "unit_id",
-      defaultValue: defValUnit,
+      defaultValue: defValUnit && defValUnit.length > 0 && defValUnit[0].label,
       chooseOptions: true,
       options: unitOptions,
       handleChange,

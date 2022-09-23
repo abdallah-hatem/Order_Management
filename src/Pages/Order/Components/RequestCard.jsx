@@ -3,7 +3,7 @@ import { FormGroup } from "reactstrap"
 import { useTranslation } from "react-i18next"
 import UpdateDelete from "./components/UpdateDelete"
 import { DateConvertor } from "./components/DateFunction"
-import ButtonComponent from "./components/ButtonComponent/ButtonComponent"
+import ButtonComponent from "../../../Web Components/ButtonComponent/ButtonComponent"
 const RequestCard = ({ index, data, Delete, CheckRequest, OnEdit }) => {
   const { t, i18n } = useTranslation()
 
@@ -40,7 +40,11 @@ const RequestCard = ({ index, data, Delete, CheckRequest, OnEdit }) => {
             <div style={{ display: "flex" }}>
               <ButtonComponent title={"Accept"} />
               <ButtonComponent title={"Reject"} />
-              <ButtonComponent onClick={Delete} title={"Delete"} />
+              <ButtonComponent
+                onClick={Delete}
+                title={"Delete"}
+                style={{ backgroundColor: "red" }}
+              />
             </div>
           </div>
         </div>

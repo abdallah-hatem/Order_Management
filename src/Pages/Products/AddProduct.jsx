@@ -9,6 +9,8 @@ import { Popup } from "devextreme-react/popup"
 import { GET_UNITS } from "../Units/Api"
 import { GET_CATEGORIES } from "../Categories/Api"
 import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
+import ScrollView from "devextreme-react/scroll-view"
+
 
 function AddProduct() {
   const defaultValues = useRef({
@@ -48,6 +50,7 @@ function AddProduct() {
 
   function handleColorSubmit() {
     colorValues.color_id = Math.floor(Date.now() * Math.random())
+    colorValues.color_name = colorValues["color_name"].replace(/\s+/g, "")
     setItem_colors((prev) => [...prev, colorValues])
     setAddedColors((prev) => [...prev, colorValues.color_name])
     setColorValues(() => ({ color_id: "#fffff", color_name: "" }))
@@ -210,7 +213,7 @@ function AddProduct() {
         <button
           className="button-34"
           style={{
-            backgroundColor: colorValues.color,
+            backgroundColor: "#37a000",
             border: "1px solid gray",
             color: colorValues.color === "#ffffff" && "gray",
             // width:80,
@@ -275,19 +278,19 @@ function AddProduct() {
   ]
 
   const colorData = [
-    {
-      label: "Color :",
-      children: (
-        <input
-          style={{ width: "50px", height: "35px" }}
-          type="color"
-          name="color_id"
-          defaultValue={"#37a000"}
-          value={colorValues.color_id.hex}
-          onChange={handleColorChange}
-        />
-      ),
-    },
+    // {
+    //   label: "Color :",
+    //   children: (
+    //     <input
+    //       style={{ width: "50px", height: "35px" }}
+    //       type="color"
+    //       name="color_id"
+    //       defaultValue={"#37a000"}
+    //       value={colorValues.color_id.hex}
+    //       onChange={handleColorChange}
+    //     />
+    //   ),
+    // },
     {
       label: "Color Name :",
       placeholder: "Color Name",
@@ -336,39 +339,41 @@ function AddProduct() {
         hideOnOutsideClick
         onHiding={() => setPopUp(false)}
         contentRender={() => (
-          <SearchBar
-            listView
-            hide
-            CardTitle="Add Inventory"
-            data={colorData}
-            showButton={false}
-            // buttonTitle="Add"
-            // handleSubmit={handleColorSubmit}
-            colWidth="10"
-            labelWidth="200px"
-            width={"60%"}
-          >
-            {addedColors.length > 0 && (
+          <ScrollView width="100%" height="100%">
+            <SearchBar
+              listView
+              hide
+              CardTitle="Add Inventory"
+              data={colorData}
+              showButton={false}
+              // buttonTitle="Add"
+              // handleSubmit={handleColorSubmit}
+              colWidth="10"
+              labelWidth="200px"
+              width={"60%"}
+            >
+              {addedColors.length > 0 && (
+                <ButtonComponent
+                  style={{ width: "150px", float: "right", backgroundColor: "red" }}
+                  title="remove last color"
+                  onClick={() => {
+                    setAddedColors((prev) => prev.slice(0, -1))
+                    setItem_colors((prev) => prev.slice(0, -1))
+                    console.log(values)
+                  }}
+                />
+              )}
               <ButtonComponent
-                style={{ width: "150px", float: "right", backgroundColor: "red" }}
-                title="remove last color"
-                onClick={() => {
-                  setAddedColors((prev) => prev.slice(0, -1))
-                  setItem_colors((prev) => prev.slice(0, -1))
-                  console.log(values)
-                }}
+                style={{ width: "100px", float: "right" }}
+                title="Add color"
+                disable={
+                  colorValues["color_name"].length == 0 ||
+                  colorValues["color_name"].replace(/\s+/g, "").length == 0
+                }
+                onClick={handleColorSubmit}
               />
-            )}
-            <ButtonComponent
-              style={{ width: "100px", float: "right" }}
-              title="Add color"
-              disable={
-                colorValues["color_name"].length == 0 ||
-                colorValues["color_name"].replace(/\s+/g, "").length == 0
-              }
-              onClick={handleColorSubmit}
-            />
-          </SearchBar>
+            </SearchBar>
+          </ScrollView>
         )}
       />
     </>
