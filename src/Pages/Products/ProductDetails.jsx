@@ -306,6 +306,8 @@ import { Popup } from "devextreme-react/popup"
 import { GET_UNITS } from "../Units/Api"
 import { GET_CATEGORIES } from "../Categories/Api"
 import { useParams } from "react-router-dom"
+import { ScrollView } from "devextreme-react"
+import ButtonComponent from "../../Web Components/ButtonComponent/ButtonComponent"
 
 function ProductDetails() {
   const defaultValues = useRef({
@@ -562,6 +564,25 @@ function ProductDetails() {
         </div>
       ),
     },
+    {
+      label: "Color :",
+      removeContainer: true,
+      component: (
+        <button
+          className="button-34"
+          style={{
+            backgroundColor: "#37a000",
+            border: "1px solid gray",
+            color: colorValues.color === "#ffffff" && "gray",
+            // width:80,
+            // height:35
+          }}
+          onClick={() => setPopUp(true)}
+        >
+          {t("Add Color")}
+        </button>
+      ),
+    },
   ]
 
   const DataCol2 = [
@@ -590,14 +611,6 @@ function ProductDetails() {
       handleChange,
     },
     {
-      label: "Product Details :",
-      placeholder: "Product Details",
-      handleChange,
-      name: "Details",
-      value: values["Details"],
-      textArea: true,
-    },
-    {
       label: "VAT :",
       placeholder: "VAT",
       handleChange,
@@ -613,50 +626,32 @@ function ProductDetails() {
       options: typeOptions,
       handleChange,
     },
-    // {
-    //   label: "Color Name :",
-    //   placeholder: "Color Name",
-    //   handleChange,
-    //   name: "color_name",
-    //   value: values["color_name"],
-    // },
     {
-      label: "Color :",
-      removeContainer: true,
-      component: (
-        <button
-          className="button-34"
-          style={{
-            backgroundColor: colorValues.color,
-            border: "1px solid gray",
-            color: colorValues.color === "#ffffff" && "gray",
-            // width:80,
-            // height:35
-          }}
-          onClick={() => setPopUp(true)}
-        >
-          {t("Add Color")}
-        </button>
-      ),
+      label: "Product Details :",
+      placeholder: "Product Details",
+      handleChange,
+      name: "Details",
+      value: values["Details"],
+      textArea: true,
     },
   ]
 
   //////////// Tables ///////////////
 
   const colorData = [
-    {
-      label: "Color :",
-      children: (
-        <input
-          style={{ width: "50px", height: "35px" }}
-          type="color"
-          name="color_id"
-          defaultValue={"#37a000"}
-          value={colorValues.color_id.hex}
-          onChange={handleColorChange}
-        />
-      ),
-    },
+    // {
+    //   label: "Color :",
+    //   children: (
+    //     <input
+    //       style={{ width: "50px", height: "35px" }}
+    //       type="color"
+    //       name="color_id"
+    //       defaultValue={"#37a000"}
+    //       value={colorValues.color_id.hex}
+    //       onChange={handleColorChange}
+    //     />
+    //   ),
+    // },
     {
       label: "Color Name :",
       placeholder: "Color Name",
@@ -704,16 +699,41 @@ function ProductDetails() {
         hideOnOutsideClick
         onHiding={() => setPopUp(false)}
         contentRender={() => (
-          <SearchBar
-            listView
-            hide
-            data={colorData}
-            buttonTitle="Add"
-            handleSubmit={handleColorSubmit}
-            colWidth="10"
-            labelWidth="200px"
-            width={"60%"}
-          />
+          <ScrollView width="100%" height="100%">
+            <SearchBar
+              listView
+              hide
+              CardTitle="Add Inventory"
+              data={colorData}
+              showButton={false}
+              // buttonTitle="Add"
+              // handleSubmit={handleColorSubmit}
+              colWidth="10"
+              labelWidth="200px"
+              width={"60%"}
+            >
+              {addedColors.length > 0 && (
+                <ButtonComponent
+                  style={{ width: "150px", float: "right", backgroundColor: "red" }}
+                  title="remove last color"
+                  onClick={() => {
+                    setAddedColors((prev) => prev.slice(0, -1))
+                    setItem_colors((prev) => prev.slice(0, -1))
+                    console.log(values)
+                  }}
+                />
+              )}
+              <ButtonComponent
+                style={{ width: "100px", float: "right" }}
+                title="Add color"
+                disable={
+                  colorValues["color_name"].length === 0 ||
+                  colorValues["color_name"].replace(/\s+/g, "").length === 0
+                }
+                onClick={handleColorSubmit}
+              />
+            </SearchBar>
+          </ScrollView>
         )}
       />
     </>

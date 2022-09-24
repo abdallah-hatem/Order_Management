@@ -14,7 +14,7 @@ function ProductionOrder() {
 
   const defaultValues = useRef({
     number: "",
-    stock_id: "",
+    stock_id: 0,
     note: "",
     date: "",
     Production_Subs: [{}],
@@ -27,25 +27,19 @@ function ProductionOrder() {
   }, [])
 
   function handleSubmit() {
-    for (const [key, value] of Object.entries(values)) {
-      if (!value) {
-        alert(t("Fill the inputs"))
-      }
-    }
+    // for (const [key, value] of Object.entries(values)) {
+    //   if (!value) {
+    //     alert(t("Fill the inputs"))
+    //   }
+    // }
 
-    ADD_PRODUCTION_ORDER({
-      number: 220919,
-      stock_id: 101,
-      cust_id: 1,
-      date: "2022-09-19",
-      Production_Subs: [
-        { ID: 0, Production_id: 0, trkeba_id: 1001, QTY: 100, COST: 10000.0 },
-      ],
-    })
+    let date = new Date(values.date)
+    setValues((prev) => ({ ...prev, date: date, stock_id: 0 }))
+    ADD_PRODUCTION_ORDER(values)
   }
 
   const [recipes, setRecipes] = useState()
-  const [recipeDetails, setRecipeDetails] = useState()
+  const [recipeDetails, setRecipeDetails] = useState([])
   const [stores, setStores] = useState()
 
   // Get Inventories
@@ -61,7 +55,9 @@ function ProductionOrder() {
   // Get Recipes
   useEffect(() => {
     recipes?.map((el) =>
-      GET_RECIPE_BY_ID(el.ID).then((data) => setRecipeDetails(data))
+      GET_RECIPE_BY_ID(el.ID).then((data) =>
+        setRecipeDetails((prev) => [...prev, ...data])
+      )
     )
   }, [recipes])
 
@@ -79,21 +75,6 @@ function ProductionOrder() {
   const storeOptions = stores?.map((el) => ({ label: el.Name, value: el.ID }))
 
   const recipeOptions = recipes?.map((el) => ({ label: el.Name, value: el.ID }))
-
-  const itemOptions = [
-    {
-      label: "Item 1",
-      value: "Item 1",
-    },
-    {
-      label: "Item 2",
-      value: "Item 2",
-    },
-    {
-      label: "Item 3",
-      value: "Item 3",
-    },
-  ]
 
   const data = [
     {
@@ -139,30 +120,30 @@ function ProductionOrder() {
       dataType: "number",
       allowEditing: false,
     },
-    {
-      field: "total",
-      caption: t("Total"),
-      dataType: "number",
-      allowEditing: false,
-      calculateCellValueHandle: (rowData) => rowData.quantity * rowData.cost,
-    },
+    // {
+    //   field: "total",
+    //   caption: t("Total"),
+    //   dataType: "number",
+    //   allowEditing: false,
+    //   calculateCellValueHandle: (rowData) => rowData.quantity * rowData.cost,
+    // },
   ]
 
   const [finalData, setFinalData] = useState([])
   console.log(finalData, "final Data")
+  console.log(recipeDetails, "recipeDetails")
 
   function handleTableData(e) {
     const tableData = e.changes[0].data
     delete tableData.__KEY__
 
-    let cost = recipeDetails?.filter((el) => tableData.recipe === el.ID_TRKEBA)[0]
+    let cost = recipeDetails.filter((el) => tableData.recipe === el.ID_TRKEBA)[0]
       .Cost
 
+    // console.log(cost, "cost")
     tableData.cost = cost
 
     setFinalData((prev) => [...prev, tableData])
-
-    console.log(tableData)
   }
 
   useEffect(() => {

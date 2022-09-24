@@ -367,8 +367,8 @@ function AddProduct() {
                 style={{ width: "100px", float: "right" }}
                 title="Add color"
                 disable={
-                  colorValues["color_name"].length == 0 ||
-                  colorValues["color_name"].replace(/\s+/g, "").length == 0
+                  colorValues["color_name"].length === 0 ||
+                  colorValues["color_name"].replace(/\s+/g, "").length === 0
                 }
                 onClick={handleColorSubmit}
               />

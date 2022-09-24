@@ -13,6 +13,7 @@ import ManageCategories from "../Pages/Categories/ManageCategories";
 import AddUnit from "../Pages/Units/AddUnit";
 import ManageUnits from "../Pages/Units/ManageUnits";
 import Login from "../Pages/Login/Login";
+import UpdateRecipes from "../Pages/Recipes/UpdateRecipes";
 
 export const routes = [
   {
@@ -121,5 +122,9 @@ export const singleRoutes = [
   {
     path: "/login",
     component: <Login />,
-  }
+  },
+  {
+    path: "/update-recipe/:id",
+    component: <UpdateRecipes />,
+  },
 ]
