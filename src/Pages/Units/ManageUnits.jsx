@@ -26,7 +26,7 @@ function ManageUnits() {
   ///// Handle Update//////
   function handleUpdate(e) {
     const updatedData = e.changes[0].key
-    console.log(updatedData)
+    console.log(updatedData,"update Data")
     setUpdatedData(updatedData)
   }
 
@@ -52,7 +52,7 @@ function ManageUnits() {
   ]
 
   useEffect(() => {
-    data && console.log(data)
+    data && console.log(data,"data")
   }, [data])
 
   return (

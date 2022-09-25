@@ -11,7 +11,7 @@ function NavBar({ handleCollapse, hidden }) {
   const { t, i18n } = useTranslation()
   let navigate = useNavigate()
 
-  const [opened, setOpened] = useState(false)
+  const [opened, setOpened] = useState(true)
   const title = opened ? "Close navigation" : "Open navigation"
 
   const style = { backgroundColor: "green", color: "white", width: "180px" }
